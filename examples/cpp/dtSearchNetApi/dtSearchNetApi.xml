@@ -1,0 +1,3179 @@
+<?xml version="1.0"?>
+<doc>
+	<assembly>
+		<name>dtSearchNetApi</name>
+	</assembly>
+	<members>
+	<member name="T:dtSearch.Engine.DisposableObject">
+		<summary>
+		Internal Base class for dtSearch.Engine objects that implement IDisposable.
+		</summary>
+		<exclude/>
+	</member>
+	<member name="T:dtSearch.Engine.AbortValue">
+		<summary>
+		Values that CheckForAbort (IIndexStatusHandler or
+		ISearchStatusHandler) can return
+		to indicate whether a job should continue.
+		</summary>
+	</member>
+		<member name="F:dtSearch.Engine.AbortValue.Continue">
+			<summary>
+			Continue the search or index update
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.AbortValue.Cancel">
+			<summary>
+			Cancel the search or index update.  For index updates,
+			documents indexed so far are saved, and the indexer
+			will stop after completing the current document.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.AbortValue.CancelImmediately">
+			<summary>
+			For index updates only, cancels the update immediately,
+			without saving any changes to the index.
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.IndexingStep">
+		<summary>
+		Values for IndexJob.StatusIndexingStep
+		</summary>
+	</member>
+		<member name="F:dtSearch.Engine.IndexingStep.ixStepNone">
+			<summary>
+			No indexing in progress
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.IndexingStep.ixStepBegin">
+			<summary>
+			Indexing started
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.IndexingStep.ixStepCreatingIndex">
+			<summary>
+			Creating index
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.IndexingStep.ixStepCheckingFiles">
+			<summary>
+			Checking files to see which files need to be reindexed
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.IndexingStep.ixStepReadingFiles">
+			<summary>
+			Reading input files and extracting words
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.IndexingStep.ixStepStoringWords">
+			<summary>
+			Storing word references in the index
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.IndexingStep.ixStepMerging">
+			<summary>
+			Merging words into the index
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.IndexingStep.ixStepCompressing">
+			<summary>
+			Compressing the index to remove obsolete information
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.IndexingStep.ixStepDone">
+			<summary>
+			Done indexing
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.IndexingStep.ixStepVerifyingIndex">
+			<summary>
+			The index is being verified
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.IndexingStep.ixStepMergingIndexes">
+			<summary>
+			Merging two or more indexes into a single index
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.SortFlags">
+		<summary>
+		Values for SearchResults.Sort
+		</summary>
+	</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortDescending">
+			<summary>
+			Sort in descending order.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortAscending">
+			<summary>
+			Sort in ascending order
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortByName">
+			<summary>
+			Sort by filename (without path)
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortByDate">
+			<summary>
+			Sort by modification date, including the time
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortByHits">
+			<summary>
+			Sort by hit count or score, depending on whether the automatic term weighting was used in the search
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortBySize">
+			<summary>
+			Sort by file size
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortByField">
+			<summary>
+			Sort by one of the UserFields.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortByIndex">
+			<summary>
+			Sort by the index the document was found in.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortByType">
+			<summary>
+			Sort by file type
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortByTitle">
+			<summary>
+			Sort by the title string
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortByLocation">
+			<summary>
+			Sort by the path of the file
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortByTime">
+			<summary>
+			Sort by modification time, ignoring the date
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortBySortKey">
+			<summary>
+			Sort by caller-specified sort key (use SetSortKey for each item to specify the key)
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortCaseInsensitive">
+			<summary>
+			Make string comparisons in the sort case-insensitive
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortNumeric">
+			<summary>
+			Sort by the integral numeric value of a field instead of its string value.
+			</summary>
+			<remarks>
+			This would cause "20" to be considered greater than "9". The sort key will be a signed, 32-bit integer.
+			</remarks>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortPdfUseTitleAsName">
+			<summary>
+			When sorting by filename, use the PDF Title as the filename for PDF files
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortHtmlUseTitleAsName">
+			<summary>
+			When sorting by filename, use the HTML Title as the filename for HTML files
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortFloatNumeric">
+			<summary>
+			Sort by the floating point numeric value of a field instead of its string value.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortCleanText">
+			<summary>
+			Remove some leading punctuation or white space from sort value before sorting.  Also removes "re:", "fw:", and "fwd:".
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortByHitCount">
+			<summary>
+			Sort by number of hits
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortByRelevanceScore">
+			<summary>
+			Sort by relevance score
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SortFlags.dtsSortByFullName">
+			<summary>
+			Sort by full path and filename
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.ConvertPathFlags">
+		<summary>
+		Flags for Server.ConvertPath
+		</summary>
+	</member>
+		<member name="F:dtSearch.Engine.ConvertPathFlags.dtsCpMakeVirtual">
+			<summary>
+			Convert a local path to a virtual path
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ConvertPathFlags.dtsCpMakeLocal">
+			<summary>
+			Convert a virtual path to a local path
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ConvertPathFlags.dtsCpMakeUNC">
+			<summary>
+			Convert a mapped path to a UNC path
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ConvertPathFlags.dtsCpRefreshMappings">
+			<summary>
+			Use the Metabase to update the table of local-to-virtual mappings that the dtSearch engine uses to perform these conversions
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ConvertPathFlags.dtsCpStoreInRegistry">
+			<summary>
+			Store the updated table of mappings in the registry.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ConvertPathFlags.dtsCpReadFromRegistry">
+			<summary>
+			Read the latest table of mappings from the registry.
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.OutputFormats">
+		<summary>
+		Output file formats for conversion of documents and generation of search reports
+		</summary>
+	</member>
+		<member name="F:dtSearch.Engine.OutputFormats.itHTML">
+			<summary>
+			HTML
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.OutputFormats.itAnsi">
+			<summary>
+			Ansi text
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.OutputFormats.itRTF">
+			<summary>
+			Microsoft Rich Text Format
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.OutputFormats.itUTF8">
+			<summary>
+			Unicode
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.OutputFormats.itXML">
+			<summary>
+			XML
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.OutputFormats.itUnformattedHTML">
+			<summary>
+			HTML, with all formatting removed
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.ErrorCodes">
+		<summary>
+		Error codes returned in a JobErrorInfo through the Errors property of SearchJob, IndexJob, etc.
+		</summary>
+	</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErAccIndex">
+			<summary>
+			The dtSearch Engine could not access an index
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErOpenTemp">
+			<summary>
+			A temporary file could not be opened
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErIxWrongVersion">
+			<summary>
+			An attempt was made to open an index created by an incompatible version of dtSearch.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErAccDirectory">
+			<summary>
+			A directory (the home or private directory during initialization) could not be accessed.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErWorkDirFail">
+			<summary>
+			The private directory could not be locked.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErAccFile">
+			<summary>
+			A file could not be accessed, either because it was not present or because it was locked in a way that prevented the dtSearch Engine from accessing it.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErFileCorrupt">
+			<summary>
+			A file could not be accessed because it appears to be damaged, causing a file parsing error.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErIndexFull">
+			<summary>
+			The index has reached the maximum size for an index.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErTimeout">
+			<summary>
+			Operation timed out (trigged by TimeoutSeconds).
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErFileEncrypted">
+			<summary>
+			A file could not be accessed because it is encrypted
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErBadRequest">
+			<summary>
+			The search request provided to the dtSearch Engine contained one or more syntax errors.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErSearchLimitReached">
+			<summary>
+			The search was stopped due to the AutoStopLimit setting (too many documents were found).
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErNoFilesRetrieved">
+			<summary>
+			No files were retrieved in a search.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErRequestTooLong">
+			<summary>
+			The search request was longer than 32,000 bytes
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErMaxWords">
+			<summary>
+			A search request matched too many unique words in an index.
+			</summary>
+			<remarks>
+			The dtSearch Engine limits the number of unique words (not hits) that can be retrieved in a search.
+			A search for * or *a* would retrieve thousands of words, exceeding this limit.
+			The default limit is 64k.
+			To increase or decrease the limit, use Options.MaxWordsToRetrieve.
+			</remarks>
+		</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErDiskFull">
+			<summary>
+			There is not enough disk space to continue indexing
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErAccessDenied">
+			<summary>
+			The index could not be locked for update due to an "Access Denied" error.
+			This means that either (1) the folder's security settings do not permit write access for
+			the user performing the update, or (2) another user or process was updating the index.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErConnectFailed">
+			<summary>
+			Unable to connect to data source during indexing
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErAccCachedDoc">
+			<summary>
+			Unable to access cached document in index
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ErrorCodes.dtsErIndexingError">
+			<summary>
+			Index update could not complete due to an error accessing the index
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.SearchFlags">
+		<summary>
+		Values for SearchJob.SearchFlags and WordListBuilder.ListMatchingWords
+		</summary>
+		<remarks>
+		<para>
+		Synonym searching: to enable synonym searching for all words in a search request,
+		set both dtsSearchSynonyms and one of the other synonym flags such as dtsSearchUserSynonyms, to
+		specify the type of synonym searching to perform.   If dtsSearchSynonyms is not set,
+		then only words marked with the synonym searching character &amp; will be expanded.
+		</para>
+		</remarks>
+	</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchFuzzy">
+			<summary>
+			Enable fuzzy searching for all words in the search request
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchPhonic">
+			<summary>
+			Enable phonic searching for all words in the search request
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchStemming">
+			<summary>
+			Enable stemming for all words in the search request
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchNatural">
+			<summary>
+			Equivalent to dtsSearchTypeAnyWords | dtsSearchAutoTermWeight.| dtsSearchPositionalScoring
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchSynonyms">
+			<summary>
+			Enable synonym expansion for all words in the search request.  (See synonym searching note above.)
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchUserSynonyms">
+			<summary>
+			When expanding synonyms, use user thesaurus.  (See synonym searching note above.)
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchWordNetSynonyms">
+			<summary>
+			When expanding synonyms, use WordNet thesaurus.  (See synonym searching note above.)
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchWordNetRelated">
+			<summary>
+			When expanding synonyms, use related words from WordNet.  (See synonym searching note above.)
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchWantHitsByWord">
+			<summary>
+			Request a list of the words that were matched in each document in SearchResultsItem.HitsByWord
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchWantHitsArray">
+			<summary>
+			Include word offsets of hits in HitsByWord report.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchDelayDocInfo">
+			<summary>
+			Optimize search by waiting until document records are requested through a search results object before reading them from the index.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchExternalSynonyms">
+			<summary>
+			Search for synonyms in an external thesaurus (see <i>External Thesaurus API</i>)
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchRegularExpression">
+			<summary>
+			Interpret the search request as a regular expression
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchWantHitDetails">
+			<summary>
+			Request detailed information about the words that generated each hit associated with an item in search results.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchAutoTermWeight">
+			<summary>
+			Apply the automatic term weighting to each term in the request.   Weighting of retrieved documents takes into account: the number of documents each word in your search request appears in (the more documents a word appears in, the less useful it is in distinguishing relevant from irrelevant documents); the number of times each word in the request appears in the documents; and the density of hits in each document. Noise words and search connectors like NOT and OR are ignored.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchTypeAllWords">
+			<summary>
+			Find all of the words in the search request
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchTypeAnyWords">
+			<summary>
+			Find any of the words in the search request
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchSelectMostRecent">
+			<summary>
+			When selecting the documents to return (up to the MaxFilesToRetrieve limit in the SearchJob), select the most recent documents rather than the best-matching documents.
+			Cannot be used with dtsSearchDelayDocInfo, because the document date for each document is needed.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchPositionalScoring">
+			<summary>
+			Rank documents higher when hits are closer to the top of the document and when hits are located close to each other within a document.  (This improves relevancy ranking for "all words" and "any words" searches.)
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchFlags.dtsSearchApplyLanguageAnalyzer">
+			<summary>
+			Apply Language Analyzer to search request, if this application uses an external language analyzer (see "Language Analyzer API")
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.ConvertFlags">
+		<summary>
+		Flags for FileConverter.Flags
+		</summary>
+	</member>
+		<member name="F:dtSearch.Engine.ConvertFlags.dtsConvertInputIsHtml">
+			<summary>
+			Assume that the input file is HTML for purposes of deciding whether to do HTML-to-HTML highlighting.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ConvertFlags.dtsConvertSkipHiddenHits">
+			<summary>
+			Do not insert BeforeHit and AfterHit marks for a hit that cannot be displayed in HTML because the text
+			is not visible. If this flag is not set, a pair of beforeHit/afterHit tags will be added before the
+			next visible text in the file.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ConvertFlags.dtsConvertRemoveScripts">
+			<summary>
+			Remove JavaScript from HTML files when adding hit highlight markings.   JavaScript in HTML files can cause errors if displayed outside will have inthe expected context of the script.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ConvertFlags.dtsConvertInputIsNotHtml">
+			<summary>
+			Assume that the input file is not HTML for purposes of deciding whether to do HTML-to-HTML conversion. If the output format is HTML, this forces the dtSearch Engine to convert the file to simple text before adding hit highlight markings.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ConvertFlags.dtsConvertViaHtml">
+			<summary>
+			For internal use.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ConvertFlags.dtsConvertXmlToXml">
+			<summary>
+			Add hit highlight markings to XML data while retaining the XML format. Set the OutputFormat to itXML.  See: Highlighting hits in XML files
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ConvertFlags.dtsConvertJustDetectType">
+			<summary>
+			Just detect the file type of the document and return it in DetectedTypeId, without generating
+			any output.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ConvertFlags.dtsConvertGetFromCache">
+			<summary>
+			Read input file from a cached document stored in the index.
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.ReportFlags">
+		<summary>
+		Flags for SearchReportJob.Flags
+		</summary>
+	</member>
+		<member name="F:dtSearch.Engine.ReportFlags.dtsReportByParagraph">
+			<summary>
+			Count context by paragraphs
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ReportFlags.dtsReportByWord">
+			<summary>
+			Count context by words
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ReportFlags.dtsReportIncludeAll">
+			<summary>
+			Include all items in the search report
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ReportFlags.dtsReportWholeFile">
+			<summary>
+			Include full text of each selected file in the report
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ReportFlags.dtsReportByWordExact">
+			<summary>
+			Count context by words, and include exactly the requested amount of context
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ReportFlags.dtsReportGetFromCache">
+			<summary>
+			Use cached version of document stored in the index, if present
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ReportFlags.dtsReportStoreInResults">
+			<summary>
+			Store the search report for each item in search results
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ReportFlags.dtsReportLimitContiguousContext">
+			<summary>
+			Limit the size of context blocks when hits are contiguous.
+			Using this flag prevents large context blocks from being extracted when
+			many hits occur close together.  For example, if a report is generated
+			with 5 words of context around each hit, a single isolated hit would
+			result in 11 words in a context block.   However, if there were 100 hits
+			clustered together, a much larger context block would be generated.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.ReportFlags.dtsReportIncludeFileStart">
+			<summary>
+			Include a block of text from the top of the file in the output
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.DebugLogFlags">
+		<summary>
+		Flags for Server.SetDebugLogging
+		</summary>
+	</member>
+		<member name="F:dtSearch.Engine.DebugLogFlags.dtsLogTime">
+			<summary>
+			Each line in the log will include the time, in hundredths of a second, since the start of execution.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.DebugLogFlags.dtsLogCommit">
+			<summary>
+			The log will be committed to disk after each line is written. This slows execution considerably but ensures that the log will survive a system crash.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.DebugLogFlags.dtsLogAppend">
+			<summary>
+			Log data is appended to the file if it already exists.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.DebugLogFlags.dtsCrashLog">
+			<summary>
+			Generate a stack trace in the logFile if an unhandled exception occurs.
+			</summary>
+			<remarks>
+			dtsCrashLog should not be combined with the other flags and the filename provided
+			should be different from the filename used for logging.
+			</remarks>
+		</member>
+	<member name="T:dtSearch.Engine.FieldFlags">
+		<summary>
+		Flags for Options.FieldFlags
+		</summary>
+		<summary>
+		Values for Options.FieldFlags
+		</summary>
+		<remarks>
+		<para>
+		FieldFlags provide options to control the indexing of meta-data associated with
+		documents.  When highlighting hits, it is important to make sure that FieldFlags
+		has the same options that were used when a document was indexed.  Otherwise,
+		hit highlighting may be incorrect due to differences in the words found in each document.
+		</para>
+		<para>
+		By default, dtSearch will index fields in documents such as the Summary Information
+		fields in Word files and META tags in HTML files.   FieldFlags can be used to suppress
+		some or all of this metadata.
+		</para>
+		<para>
+		dtSearch will also add a "Filename" field to the end of each document, with the full path
+		and filename of the document, so words in the document name will be searchable like other
+		text.   To suppress this completely, use dtsoFfSkipFilenameField.  To include only
+		the name of the document (not the path), use dtsoSkipFilenameFieldPath.
+		</para>
+		<para>
+		The dtsoFfHtmlShow* flags can be used to make normally hidden HTML elements, such as
+		styles or links, visible and searchable.   For each category of element that is enabled,
+		a section will be added to the end of the HTML file listing the items in that category.
+		For example, if dtsoFfHtmlShowComments is set, then each HTML file will have a list of
+		the embedded comments after the body of the HTML.
+		</para>
+		</remarks>
+	</member>
+		<member name="F:dtSearch.Engine.FieldFlags.dtsoFfSkipFilenameField">
+			<summary>
+			Do not generate a field named Filename containing the name of the file.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.FieldFlags.dtsoFfSkipDocumentProperties">
+			<summary>
+			Do not index or search document summary fields
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.FieldFlags.dtsoFfHtmlShowLinks">
+			<summary>
+			Make HTML links searchable
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.FieldFlags.dtsoFfHtmlShowImgSrc">
+			<summary>
+			Make HTML IMG src= attribute searchable
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.FieldFlags.dtsoFfHtmlShowComments">
+			<summary>
+			Make HTML Comments searchable
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.FieldFlags.dtsoFfHtmlShowScripts">
+			<summary>
+			Make HTML Scripts searchable
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.FieldFlags.dtsoFfHtmlShowStylesheets">
+			<summary>
+			Make HTML style sheets searchable
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.FieldFlags.dtsoFfHtmlShowMetatags">
+			<summary>
+			Make HTML meta tags searchable and visible, appended to the body of the HTML file
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.FieldFlags.dtsoFfHtmlNoHeaderFields">
+			<summary>
+			Suppress automatic generation of the HtmlTitle field for the title and the HtmlH1,
+			HtmlH2, etc. fields for header content in HTML files.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.FieldFlags.dtsoFfOfficeSkipHiddenContent">
+			<summary>
+			Skip non-text streams in Office (Word, Excel, PowerPoint) documents.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.FieldFlags.dtsoFfXmlHideFieldNames">
+			<summary>
+			Do not index field names in XML files
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.FieldFlags.dtsoFfShowNtfsProperties">
+			<summary>
+			Make NTFS file properties searchable
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.FieldFlags.dtsoFfXmlSkipAttributes">
+			<summary>
+			Do not index attributes in XML files
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.FieldFlags.dtsoFfSkipFilenameFieldPath">
+			<summary>
+			Include only the filename (not the path) in the Filename field generated at the end of each document.
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.HyphenSettings">
+		<summary>
+		Values for Options.Hyphens
+		</summary>
+		<remarks>
+		<para>
+		The dtSearch Engine supports four options for the treatment of hyphens when indexing documents: spaces, searchable text, ignored, and "all three".
+		</para><para>
+		<i>For most applications, treating hyphens as spaces is the best option.</i> Hyphens are translated to spaces during indexing and during searches. For example, if you index "first-class mail" and search for "first class mail", "first-class-mail", or "first-class mail", you will find the phrase correctly.
+		</para><para>
+		<b>Effect on Indexes</b>
+		</para><para>
+		When an index is created, the hyphenation option currently in effect is stored in the index, and cannot be changed without re-creating that index. Therefore, the hyphenation option you select affects any indexes you create in the future, but it does not affect indexes that already exist.
+		</para><para>
+		When a user searches an index, the hyphenation option for that index applies to the user's search request.
+		</para><para>
+		
+		<b>How the options apply during indexing</b>
+		
+		</para><para>
+		During indexing, dtSearch extracts a stream of words from each document, and each word is assigned a number that represents that word's position in the file. The first word is assigned the position "1", the second word is assigned the position "2", and so forth. Consider a document that starts with the sentence, "I sent it by first-class mail". The following describes how the document would be treated under each of the hyphenation options:
+		</para><para>
+		1.   Hyphens treated as spaces:
+		I (1), sent (2), it (3), by (4), first (5), class (6), mail (7)
+		</para><para>
+		2.   Hyphens treated as searchable characters:
+		I (1), sent (2), it (3), by (4), first-class (5), mail (6)
+		</para><para>
+		3.   Hyphens ignored:
+		I (1), sent (2), it (3), by (4), firstclass (5), mail (6)
+		</para><para>
+		4.   All three:
+		I (1), sent (2), it (3), by (4), (5) first-class, (6) first-class, (5) first, (6) class, (5) firstclass
+		(6) firstclass, (7) mail
+		</para><para>
+		
+		</para><para>
+		<b>How the options apply during searching</b>
+		
+		</para><para>
+		During a search, dtSearch translates the search request according to the hyphenation option for the index being searched. For example, if you search for "first-class" in an index created with hyphens treated as spaces, the search request is translated into "first class".
+		
+		</para><para>
+		During a search of an index created with the "all three" option, the search request is not modified. For example, if you search for "first-class", dtSearch will not search for "firstclass" or "first class".
+		
+		</para><para>
+		<b>Effects of the "all three" option</b>
+		</para><para>
+		The "all three" option has one advantage over treating hyphens as spaces: it will return a document containing "first-class" in a search for "firstclass". Otherwise, it provides no benefit over treating hyphens as spaces, and it has some significant disadvantages:
+		</para><para>
+		1.   The "all three" option generates many extra words during indexing. For each pair of words separated by a hyphen, six words are generated in the index.
+		</para><para>
+		2.   It can produce unexpected results in searches involving longer phrases or words with multiple hyphens. With the "all three" option enabled, the sequence "a-b-c" would be indexed as: a (1), ab (1) a-b (1), ab (2), a-b (2), b (2), b-c (2), bc (2), b-c (3), bc (3), c (3). Thus, "a b c" would be found as would "a bc" or "ab c", but not "a-b-c" or "a-bc" or "ab-c". (To prevent the number of permutations from becoming excessive, dtSearch only permutes one hyphen at a time.)
+		</para>
+		</remarks>
+	</member>
+		<member name="F:dtSearch.Engine.HyphenSettings.dtsoHyphenAsIgnore">
+			<summary>
+			index "first-class" as "firstclass"
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.HyphenSettings.dtsoHyphenAsHyphen">
+			<summary>
+			index "first-class" as "first-class"
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.HyphenSettings.dtsoHyphenAsSpace">
+			<summary>
+			index "first-class" as "first" and "class"
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.HyphenSettings.dtsoHyphenAll">
+			<summary>
+			index "first-class" all three ways
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.BinaryFilesSettings">
+		<summary>
+		Values for Options.BinaryFiles
+		</summary>
+		<remarks>
+		<para>
+		Use Options.BinaryFiles to specify whether dtSearch should index binary files as plain text, skip them entirely, or filter out only the text of binary files.
+		</para>
+		<para>
+		Binary files are files that dtSearch does not recognize as documents.   Examples of binary files include executable programs, fragments of documents recovered through an "undelete" process, or blocks of unallocated or recovered data obtained through computer forensics.  Content in these files may be stored in a variety of formats, such as plain text, Unicode text, or fragments of .DOC or .XLS files.  Many different fragments with different encodings may be present in the same binary file.  Indexing such a file as if it were a simple text file would miss most of the content.
+		</para>
+		<para>
+		The dtSearch filtering algorithm scans a binary file for anything that looks like text using multiple encoding detection methods.  The algorithm can detect sequences of text with different encodings or formats in the same file, so it is much better able to extract content from recovered or corrupt data than a simple text scan.  Input files can be up to 2 Gb in size.
+		</para>
+		</remarks>
+	</member>
+		<member name="F:dtSearch.Engine.BinaryFilesSettings.dtsoFilterBinary">
+			<summary>
+			Filter text from binary files using the character array in binaryFilterTextChars to determine which characters are text.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.BinaryFilesSettings.dtsoIndexBinary">
+			<summary>
+			Index all contents of binary files as single-byte text.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.BinaryFilesSettings.dtsoIndexSkipBinary">
+			<summary>
+			Do not index files binary files
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.BinaryFilesSettings.dtsoFilterBinaryUnicode">
+			<summary>
+			Filter text from binary files using a text extraction algorithm that scans for sequences of single-byte, UTF-8, or Unicode text in the input.  This option is recommended for working with forensic data, particularly when searching for non-English text.
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.UnicodeFilterFlags">
+		<summary>
+		Values for Options.UnicodeFilterFlags
+		</summary>
+	</member>
+		<member name="F:dtSearch.Engine.UnicodeFilterFlags.dtsoUfExtractAsHtml">
+			<summary>
+			Extracting blocks as HTML has no effect on the text that is extracted, but it adds additional information in
+			HTML comments to each extracted block.  The HTML comments identify the starting byte offset and encoding of
+			each piece of text extracted from a file.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.UnicodeFilterFlags.dtsoUfOverlapBlocks">
+			<summary>
+			Overlapping blocks prevents text that crosses a block boundary from being missed in the filtering process.  With overlapping enabled, each block extends 256 characters past the start of the previous block.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.UnicodeFilterFlags.dtsoUfAutoWordBreakByLength">
+			<summary>
+			Automatically insert a word break in long sequences of letters.
+			A word break will be inserted when the word length reaches
+			Options.MaxWordLength.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.UnicodeFilterFlags.dtsoUfAutoWordBreakByCase">
+			<summary>
+			Automatically insert a word break when a capital letter appears
+			following lower-case letters.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.UnicodeFilterFlags.dtsoUfAutoWordBreakOnDigit">
+			<summary>
+			Automatically insert a word break when a digit follows letters.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.UnicodeFilterFlags.dtsoUfAutoWordBreakOverlapWords">
+			<summary>
+			When a word break is automatically inserted due to dtsoUfAutoWordBreakByLength,
+			overlap the two words generated by the word break.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.UnicodeFilterFlags.dtsoUfFilterFailedDocs">
+			<summary>
+			When a document cannot be indexed due to file corruption or
+			encryption, apply the filtering algorithm to extract text from the file.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.UnicodeFilterFlags.dtsoUfFilterAllDocs">
+			<summary>
+			Ignore file format information and apply Unicode Filtering to
+			all documents.
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.IndexingFlags">
+		<summary>
+		Values for IndexJob.Flags
+		</summary>
+	</member>
+		<member name="F:dtSearch.Engine.IndexingFlags.dtsAlwaysAdd">
+			<summary>
+			Index every document specified in the IndexJob, even if the document is already in the index
+			with the same modification date and size
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.IndexingFlags.dtsIndexCreateCaseSensitive">
+			<summary>
+			Create a case-sensitive index.  Index will treat words with different capitalization as different words. (apple and Apple would be two different words.)
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.IndexingFlags.dtsIndexCreateAccentSensitive">
+			<summary>
+			Create an access-sensitive index.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.IndexingFlags.dtsIndexCreateRelativePaths">
+			<summary>
+			Use relative rather than absolute paths in storing document locations.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.IndexingFlags.dtsIndexResumeUpdate">
+			<summary>
+			Resume an earlier index update that did not complete.  (Version 7 indexes only.)
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.IndexingFlags.dtsIndexCacheText">
+			<summary>
+			Compress and store the text of documents in the index, for use in generating Search Reports
+			and highlighting hits.  (Version 7 indexes only.)
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.IndexingFlags.dtsIndexCacheOriginalFile">
+			<summary>
+			Compress and store documents in the index, for use in generating Search Reports
+			and highlighting hits.  (Version 7 indexes only.)
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.IndexingFlags.dtsIndexCacheTextWithoutFields">
+			<summary>
+			When text caching is enabled, do not cache any fields that were provided through the data source API (in DocFields).
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.IndexingFlags.dtsIndexKeepExistingDocIds">
+			<summary>
+			When compressing an index, do not remap document ids, so document ids will be unmodified in the
+			index once compression is done.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.IndexingFlags.dtsIndexCreateVersion7">
+			<summary>
+			Create an index using the version 7 index format.  Version 7 indexes are created by default in
+			versions after 7.0, so this flag is no longer needed.
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.TextFlags">
+		<summary>
+		Values for Options.TextFlags
+		</summary>
+	</member>
+		<member name="F:dtSearch.Engine.TextFlags.dtsoTfSkipNumericValues">
+			<summary>
+			By default, dtSearch indexes numbers both as text and as numeric values, which is necessary for numeric range searching.  Use this flag to suppress indexing of numeric values in applications that do not require numeric range searching.   This setting can reduce the size of the index by about 20%.
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.TypeId">
+		<summary>
+		Values for IndexFileInfo.TypeId and SearchResultsItem.TypeId
+		</summary>
+	</member>
+	<member name="T:dtSearch.Engine.MessageCode">
+		<summary>
+		Values for IndexProgressInfo.UpdateType, which indicates the reason for a callback sent
+		through IIndexStatusHandler
+		</summary>
+	</member>
+		<member name="F:dtSearch.Engine.MessageCode.dtsnIndexBegin">
+			<summary>
+			Start of an indexing job.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.MessageCode.dtsnIndexDone">
+			<summary>
+			End of an indexing job
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.MessageCode.dtsnIndexCreate">
+			<summary>
+			Index is being created
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.MessageCode.dtsnIndexCheckingFiles">
+			<summary>
+			dtSearch is checking files to see if they need to be indexed.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.MessageCode.dtsnIndexToAddUpdate">
+			<summary>
+			Update to amount of text to be indexed
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.MessageCode.dtsnIndexAdded">
+			<summary>
+			Update to number of files/bytes added so far
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.MessageCode.dtsnIndexStartingFile">
+			<summary>
+			Starting to index a file
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.MessageCode.dtsnIndexFileProgress">
+			<summary>
+			Indexing a file
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.MessageCode.dtsnIndexFileDone">
+			<summary>
+			File indexed successfully
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.MessageCode.dtsnIndexFileOpenFail">
+			<summary>
+			File could not be opened, either due to an access error or
+			file format problem
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.MessageCode.dtsnIndexFileBinary">
+			<summary>
+			File not indexed because it is not in a recognized file format,
+			and Options.BinaryFiles = dtsoIndexSkipBinary
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.MessageCode.dtsnIndexMergeProgress">
+			<summary>
+			Storing words in the index ("merge" in this context means merging into
+			the main word list)
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.MessageCode.dtsnIndexCompressProgress">
+			<summary>
+			Compressing an index
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.MessageCode.dtsnIndexFileEncrypted">
+			<summary>
+			File could not be indexed because of encryption
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.MessageCode.dtsnIndexStoringWords">
+			<summary>
+			Words read from one or more files are being stored in the index
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.MessageCode.dtsnIndexStartingUpdate">
+			<summary>
+			Index update starting
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.MessageCode.dtsnIndexMergeJobProgress">
+			<summary>
+			Index merge (combining one or more indexes) in progress
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.MessageCode.dtsnIndexVerifyProgress">
+			<summary>
+			Index verify in progress
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.DataSource">
+		<summary>
+		Interface for the dataSourceToIndex member of IndexJob, for indexing non-file data sources such as databases.
+		</summary>
+		<remarks>
+		<para>
+		An IndexJob provides two ways specify the text to index: by files (the FoldersToIndex, Include Filters,
+		and ExcludeFilters properties) and by
+		data source (the DataSourceToIndex property). Most commonly, the text exists in disk files, in which case
+		you would specify the files to be indexed using folder names and include and exclude filters.
+		</para>
+		<para>
+		In some situations, however, the text to be indexed may not be readily available as disk files.
+		For example, the text may exist as rows in a remote SQL database or in Microsoft Exchange
+		message stores.
+		To supply this text to the dtSearch indexing engine, you can create an object that accesses the
+		text and then attach the object to an <see cref="T:dtSearch.Engine.IndexJob">IndexJob</see>
+		as the DataSourceToIndex property.
+		</para>
+		<para>
+		The dtSearch Engine will call the GetNextDoc method of your DataSource implementation
+		to obtain documents to index.   On each call, dtSearch will use the properties supplied (DocName,
+		DocModifiedDate, DocFields, DocBytes, etc.) to set up a document object to index.
+		</para>
+		<para>
+		On each call to GetNextDoc, the DocTypeId, DocId, and DocWordCount properties will be filled
+		in with the results of the previous document indexed.   This enables the calling application
+		to know the file type and document id assigned to each document after it has been indexed.
+		(The document id is a unique integer identifying each document in an index, and can be used
+		in <see cref="T:dtSearch.Engine.SearchFilter">SearchFilter</see> objects to limit searches to a subset of the documents in the index.)
+		</para>
+		<para>
+		If the IndexingFlags.dtsAlwaysAdd flag is not set in the IndexJob, the DocName and DocModifiedDate
+		will be used to determine whether the document is already in the index with the same date, and, if so, the
+		document will not be reindexed.  In this case, the DocTypeId, DocId, and DocWordCount properties
+		will be set to the values assigned when the document was originally indexed.
+		</para>
+		<para>
+		The DocFields property lets you add meta-data to the document text.  Fields can be searchable
+		or non-searchable, and can be designated as "stored" so they will be returned as document properties
+		in search results (for example, to store a row id for easy access after a search).
+		Field names can also include nesting, so instead of just "Author" or "Subject" you could use
+		"Meta/Author" and "Meta/Subject".
+		</para>
+		<para>
+		For sample code demonstrating the DataSource API, see:
+		C:\Program Files\dtSearch Developer\examples\cs\ado_demo (C# sample) and
+		C:\Program Files\dtSearch Developer\examples\vb.net\ado_demo (VB.NET sample)
+		</para>
+		<para>
+		Note:  The IncludeFilters and ExcludeFilters in IndexJob do not apply to content returned
+		from a data source.
+		</para>
+		</remarks>
+		<seealso cref="T:dtSearch.Engine.IndexJob"/>
+	</member>
+		<member name="M:dtSearch.Engine.DataSource.Rewind">
+			<summary>
+			Initialize the data source so the next GetNextDoc call will return the first document.
+			</summary>
+			<returns>
+			true if the data source was initialized successfully, or false if the data could not be accessed.
+			</returns>
+		</member>
+		<member name="M:dtSearch.Engine.DataSource.GetNextDoc">
+			<summary>
+			Get the next document from the data source.
+			</summary>
+			<returns>
+			true if a document was obtained, or false if there are no more documents to process.
+			</returns>
+		</member>
+		<member name="P:dtSearch.Engine.DataSource.DocName">
+			<summary>
+			The DocName is the name of the document, as you want it to appear in search results.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.DataSource.DocIsFile">
+			<summary>
+			If True, DocName will be interpreted as the name of a file to be indexed, and dtSearch will index the contents of the file along with any data provided in DocText and DocFields.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.DataSource.DocDisplayName">
+			<summary>
+			The DocDisplayName is a user-friendly version of the filename, which the dtSearch end-user product displays in search results.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.DataSource.DocModifiedDate">
+			<summary>
+			The date that the document was last modified.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.DataSource.DocCreatedDate">
+			<summary>
+			The date that the document was originally created.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.DataSource.DocText">
+			<summary>
+			In DocText, supply the text you want the dtSearch Engine to index.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.DataSource.DocFields">
+			<summary>
+			In DocFields, supply any fielded data you want the dtSearch Engine to index.
+			</summary>
+			<remarks>
+			<para>DocFields is a string containing any number of field-value pairs.  Each field name
+			and each value must be followed by a TAB character (\t or Chr(9)).
+			</para>
+			<para>
+			Add a * in front of a field name to prevent the field name from being indexed as
+			part of the field. Example: "*SampleField\t This is the text of SampleField\t".
+			</para>
+			<para>
+			Add two * in front of a field name to designate the field as a hidden stored field.
+			Example: "**SampleField\t This is the text of SampleField". Hidden stored fields
+			are automatically stored in the index as document properties, and any text in a hidden
+			stored field is not searchable.   After a search, the values of any hidden stored
+			fields will be returned in SearchResultsItem.UserFields for each item.
+			</para>
+			<para>
+			Field names can include nesting, using / to separate field name elements.  Example:
+			"Meta/Subject\t This is the subject\tMeta/Author\t This is the author"
+			In this example, you could search across both fields by searching for "Meta contains
+			(something)", or you could search for "Author contains (something)", or you could
+			search for "Meta/Author contains (something)" to distinguish this Author field from
+			any other Author fields that might be present in the document.
+			</para>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.DataSource.DocId">
+			<summary>
+			Each time GetNextDoc() is called, DocId will contain the doc id of the previous document.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.DataSource.DocWordCount">
+			<summary>
+			Each time GetNextDoc() is called, DocWordCount will contain the number of words in the previous document.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.DataSource.DocTypeId">
+			<summary>
+			Each time GetNextDoc() is called, DocTypeId will return an integer identifying the file type of the previous document.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.DataSource.WasDocError">
+			<summary>
+			Each time GetNextDoc() is called, WasDocError will be true if there was an error processing the
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.DataSource.DocError">
+			<summary>
+			If WasDocError is true, DocError will contain a string providing details on the nature of the error.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.DataSource.HaveDocBytes">
+			<summary>
+			Set HaveDocBytes to true if there is binary document data to process in DocBytes
+			</summary>
+		</member>
+			<member name="P:dtSearch.Engine.DataSource.DocBytes">
+				<summary>
+				Use DocBytes to provide an array of bytes for dtSearch to use as the binary contents of this document.
+				</summary>
+				<remarks>
+				<para>
+				dtSearch treats the contents of DocBytes as if it were a file found on disk, so it can be
+				any binary document format that dtSearch supports, such as a PDF file, DOC file, XLS file,
+				etc.   The contents of the document in DocBytes, along with any properties such as
+				Office Summary Information fields, are combined with the field-value pairs in DocFields
+				and indexed as a single document.
+				</para>
+				<para>
+				Set HaveDocBytes to true if there is a document in DocBytes.
+				</para>
+				</remarks>
+			</member>
+	<member name="T:dtSearch.Engine.FileConverter">
+		<summary>
+		Converts files to HTML, RTF, or text, optionally marking hits with
+		caller-supplied tags.
+		</summary>
+		<remarks>
+		<para>
+		Use SetInputItem to set up most of the properties of FileConverter from an item in SearchResults.
+		SetInputItem will set the InputFile, InputTypeId, InputDocId, Hits, AlphabetLocation, and IndexRetrievedFrom.
+		</para>
+		<para>The document data to convert can consist of one binary document file, such as a Word document,
+		and any number of field-value pairs in InputFields.  InputText can be used to provide additional text
+		to include in the converted output.</para>
+		<para>The binary document file to convert can be provided either as a disk file, in which InputFile is the name
+		of the file to convert, or in a memory buffer in InputBytes.  InputText and InputFields are assumed to contain
+		nothing but plain text (not HTML or RTF, which must be provided through InputFile or InputBytes).</para>
+		<para> InputFile must be an accessible disk file.  UNC paths will work, provided that the network resource
+		can be accessed, but HTTP paths will not.  To convert data accessed by HTTP, download the data to a memory buffer
+		and supply it in InputBytes.</para>
+		<para>If the original data was indexed using the DataSource indexing API, then to highlight hits
+		set InputBytes, InputFields, and InputText to the same values that were returned from the data source
+		as DocBytes, DocFields, and DocText when the document was indexed.</para>
+		<para>The BeforeHit and AfterHit markers are inserted before and after each hit word. The BeforeHit and AfterHit markers can contain hypertext links. To facilitate creation of hit navigation markers, the strings "%%ThisHit%%", "%%NextHit%%", and "%%PrevHit%%" will be replaced with ordinals representing the current hit, the next hit, and the previous hit in the document.
+		</para>
+		</remarks>
+	</member>
+		<member name="M:dtSearch.Engine.FileConverter.SetInputItem(dtSearch.Engine.SearchResults,System.Int32)">
+			<summary>
+			SetInputItem provides a quick way to set up a FileConvertJob with a particular item from a SearchResults list.
+			</summary>
+			<param name="results">The SearchResults containing the document to convert.</param>
+			<param name="whichItem">The zero-based index of the document in results</param>
+		</member>
+		<member name="M:dtSearch.Engine.FileConverter.Execute">
+			<summary>
+			Performs the conversion.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.OutputToString">
+			<summary>
+			If true, output will be stored in an in-memory string variable rather than a disk file. (OutputFile will be ignored.) After the Execute method is done, the output will be in the OutputString property.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.Flags">
+			<summary>
+			Flags that control the conversion.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.InputDocId">
+			<summary>
+			The doc id of the document being converted.  This is used when the document is being
+			extracted from the index rather than from InputBytes or InputText.  SetInputItem() will
+			set this based on information in SearchResults.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.InputTypeId">
+			<summary>
+			The file type of the input document when it was indexed.  SetInputItem() will
+			set this based on information in SearchResults.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.OutputFormat">
+			<summary>
+			By default, a FileConverter converts the input file to HTML. Other supported options are:  itRTF,
+			itUTF8 (Unicode text), itAnsi, and itXML (for XML input data only).
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.OutputStringMaxSize">
+			<summary>
+			When output is directed to an in-memory string, you may wish to limit the maximum amount of memory used. To do this, set OutputStringMaxSize to the maximum size you want to allow.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.TimeoutSeconds">
+			<summary>
+			Set TimeoutSeconds to the maximum amount of time you want to permit.  The default is 0, in which case
+			Execute will not timeout.
+			</summary>
+			<remarks>
+			When this time is exceeded,
+			Execute will halt leaving incomplete results in the OutputFile or OutputString.
+			If TimeoutSeconds is 0 (the default), no time limit will be set. After a timeout has occured, the Errors property will contain an message code dtsErTimeout.
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.AlphabetLocation">
+			<summary>
+			The location of the dtSearch alphabet file to use when highlighting hits.  SetInputItem() will
+			set this based on information in SearchResults.
+			</summary>
+			<remarks>
+			The alphabet file determines how dtSearch counts words, so it is important that the same alphabet file used to index or search a file also be used to highlight hits. For more information on how hit highlighting works, see Highlighting Hits in the online help. To ensure that the same alphabet used to index a file is used to highlight hits in that file, set the alphabetLocation to the folder where the index is located. The alphabet definition will be stored in this folder (in a file named INDEX_A.IX). If no alphabetLocation is specified, dtSearch will use the default alphabet.
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.AfterHit">
+			<summary>
+			If an array of hit offsets has been provided in Hits, then the BeforeHit and AfterHit strings will be used to mark each hit in the document in the converted output
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.BaseHRef">
+			<summary>
+			For HTML output, an HREF for a BASE tag to be inserted in the header.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.BeforeHit">
+			<summary>
+			If an array of hit offsets has been provided in Hits, then the BeforeHit and AfterHit strings will be used to mark each hit in the document in the converted output
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.Footer">
+			<summary>
+			The Footer will be appended to the conversion output and can use tags in the output format, such as HTML tags in a document converted to HTML.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.Header">
+			<summary>
+			The Header will appear at the top of the conversion output and can use tags in the output format, such as HTML tags in a document converted to HTML.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.HtmlHead">
+			<summary>
+			Use HtmlHead to supply HTML data to appear inside the HEAD section of the output.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.IndexRetrievedFrom">
+			<summary>
+			The index in which the document was found.  SetInputItem will set this based on information in SearchResults.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.InputFields">
+			<summary>
+			If the document was indexed using a DataSource object, supply the same fields in InputFields that the DataSource returned for this document in the DocFields property.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.InputFile">
+			<summary>
+			Name of the file to convert.  This can be a local disk file or a UNC path, but not an HTTP file.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.InputText">
+			<summary>
+			If the document was indexed using a DataSource object, supply the same text in InputText that the DataSource returned for this document in the DocText property.
+			</summary>
+		</member>
+			<member name="P:dtSearch.Engine.FileConverter.InputBytes">
+				<summary>
+				Use InputBytes to provide a document in a memory buffer rather than as a disk file.
+				</summary>
+			</member>
+			<member name="P:dtSearch.Engine.FileConverter.Hits">
+				<summary>
+				Word offsets of the hits to highlight using the BeforeHit and AfterHit marks.
+				</summary>
+			</member>
+		<member name="P:dtSearch.Engine.FileConverter.OutputFile">
+			<summary>
+			Name of the converted file to create.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.OutputString">
+			<summary>
+			If OutputToString is true, output will be stored in OutputString rather than in a disk file.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.Errors">
+			<summary>
+			A JobErrorInfo containing information about any errors that occurred during conversion.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.FileConverter.DetectedTypeId">
+			<summary>
+			File type of input document detected by dtSearch file parsers.
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.IndexFileInfo">
+		<summary>
+		Information about a document being indexed (part of IndexProgressInfo)
+		</summary>
+	</member>
+	<member name="T:dtSearch.Engine.IndexProgressInfo">
+		<summary>
+		State of an index update
+		</summary>
+	</member>
+	<member name="T:dtSearch.Engine.IndexInfo">
+		<summary>
+		Information about the current state of an index
+		</summary>
+	</member>
+	<member name="T:dtSearch.Engine.IIndexStatusHandler">
+		<summary>
+		Provides a way for the caller to receive updates as the IndexJob
+		progresses.
+		</summary>
+		<remarks>
+		Use IIndexStatusHandler if your application needs to receive a
+		notification each time a document is indexed.
+		</remarks>
+	</member>
+	<member name="T:dtSearch.Engine.IndexJob">
+		<summary>
+		Create or update indexes
+		</summary>
+		<remarks>
+		<para>
+		For more information on creating,
+		updating, and maintaining indexes, see
+		<see href="dtSearchApiRef.chm::/Building_and_Maintaining_Indexes.html">Building and Maintaining Indexes</see>
+		in dtSearchApiRef.chm.
+		</para>
+		<para>
+		To create or update an index, make an IndexJob, use the properties to describe the indexing task you
+		want the engine to perform, and call the Execute method.
+		</para>
+		<para>
+		IndexJob provides two ways to specify
+		the text to be indexed: (1) the FoldersToIndex, Include Filters, and ExcludeFilters members
+		let you specify directories and filename filters
+		identifying a set of disk files to index, and (2) the DataSourceToIndex member lets you supply
+		text data directly to the dtSearch Engine for indexing, using an object that implements
+		the <see cref="T:dtSearch.Engine.DataSource">DataSource</see> interface.  DataSourceToIndex is useful for indexing data
+		from non-file sources such as message stores, SQL databases, dynamically-generated data, or any non-file
+		data accessible to your program.
+		</para>
+		<para>
+		The Action flags specify the actions you want the engine to perform. If more than one action is specified,
+		the engine will perform the actions in the following order: create, removeDeleted, removeListed, add,
+		compress, merge, verify.
+		</para>
+		</remarks>
+		<seealso cref="T:dtSearch.Engine.DataSource"/>
+		<seealso href="dtengine.chm::/Building_and_Maintaining_Indexes.htm">"Building and Maintaining Indexes"</seealso>
+	</member>
+		<member name="P:dtSearch.Engine.IndexJob.ActionAdd">
+			<summary>
+			Add documents to an existing index.  If ActionCreate is not set, the index
+			must already exist or the IndexJob will fail.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.ActionCompress">
+			<summary>
+			Remove obsolete information from the index.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.ActionCreate">
+			<summary>
+			Create a new index. If an index already exists in the specified directory, the index will be
+			destroyed and replaced with a new, empty index.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.ActionRemoveDeleted">
+			<summary>
+			Check that each file in the index still exists on disk and remove from the index any files that no longer exist.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.ActionRemoveListed">
+			<summary>
+			Remove the files listed in the text file identified by ToRemoveListName from the index.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.ActionVerify">
+			<summary>
+			Scan all index structures in the index to verify that the index is not damaged.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.ActionMerge">
+			<summary>
+			Merge the indexes listed in IndexesToMerge into the index in IndexPath.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.CreateAccentSensitive">
+			<summary>
+			Create accent sensitive index, so accents on letters will be treated as significant when searching
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.CreateCaseSensitive">
+			<summary>
+			Create case sensitive index, so apple and Apple will be two different words.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.CreateRelativePaths">
+			<summary>
+			Use relative rather than absolute paths when storing document locations.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.DataSourceToIndex">
+			<summary>
+			DataSource object to index.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.IndexPath">
+			<summary>
+			Full path of the folder where the index is located.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.StatusHandler">
+			<summary>
+			Object to receive status update notifications during indexing.  Can be used to
+			provide a progress display and to provide an opportunity to cancel an index update.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.StoredFields">
+			<summary>
+			Fields to be stored in the index for each document and returned as document properties in SearchResults.
+			</summary>
+			<remarks>
+			<para>
+			When dtSearch indexes a document that contains fields, all fields are automatically
+			made searchable.
+			</para>
+			<para>
+			Additionally, you can use StoredFields to designate certain fields as document properties
+			that should be returned in search results.  For example, if you make "Subject" a stored field,
+			then the
+			<see cref="T:dtSearch.Engine.SearchResultsItem">SearchResultsItem</see>
+			for each email message indexed will include the message Subject in
+			<see cref="F:dtSearch.Engine.SearchResultsItem.UserFields">SearchResultsItem.UserFields</see>.
+			</para>
+			<para>
+			StoredFields expressions can include the wildcards * and ?.
+			</para>
+			<para>
+			The maximum amount of data to store for a field is controlled by Options.MaxStoredFieldSize.
+			</para>
+			</remarks>
+			<seealso cref="T:dtSearch.Engine.SearchResultsItem"/>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.FoldersToIndex">
+			<summary>
+			List of folders (or files) to index (add &lt;+&gt; after a folder name to include subfolders).
+			</summary>
+			<remarks>
+			<para>
+			Use FoldersToIndex to specify the folders that should be scanned to
+			locate documents to be indexed.  Add &lt;+&gt; after a folder name to include subfolders,
+			like this:  "c:\docs&lt;+&gt;".
+			</para>
+			<para>A file will be indexed if it matches one of the IncludeFilters and does not match
+			any of the ExcludeFilters.</para>
+			<para>
+			Filenames can also be added to FoldersToIndex, so to add c:\docs\sample.doc to the
+			index, add "c:\docs\sample.doc" to the FoldersToIndex collection (this is more efficient
+			than adding "c:\docs" to FoldersToIndex and setting IncludeFilters to "sample.doc").
+			</para>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.ExcludeFilters">
+			<summary>
+			Filters specifying documents not to index in the selected folders.
+			</summary>
+			<remarks>
+			<para>Filename filters apply to the FoldersToIndex.  Documents returned by a DataSource are
+			not filtered.</para>
+			<para>A file will be indexed if it matches one of the IncludeFilters and does not match
+			any of the ExcludeFilters.</para>
+			<para>A filename filter that does not contain a slash is compared
+			to the name of each file. A filename filter that contains a slash is compared to the
+			fully-qualified pathname of each file.</para>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.IncludeFilters">
+			<summary>
+			Filters specifying documents to index in the FoldersToIndex.
+			</summary>
+			<remarks>
+			<para>Filename filters apply to the FoldersToIndex.  Documents returned by a DataSource are
+			not filtered.</para>
+			<para>A file will be indexed if it matches one of the IncludeFilters and does not match
+			any of the ExcludeFilters.</para>
+			<para>A filename filter that does not contain a slash is compared
+			to the name of each file. A filename filter that contains a slash is compared to the
+			fully-qualified pathname of each file.</para>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.ToRemoveListName">
+			<summary>
+			Name of file containing list of files to remove from the index.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.Errors">
+			<summary>
+			Contains any error messages generated during the indexing job.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.MaxMemToUseMB">
+			<summary>
+			Maximum amount of memory that the indexer will use for workspace (in megabytes). By default, the indexer will calculate how much memory to use based on the size of the document collection being indexed and the amount of physical RAM available (no more than 50% of the amount of physical RAM installed will be used). At least 10 Mb is needed.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.TempFileDir">
+			<summary>
+			Folder to use instead of the index folder for temporary files during indexing.
+			</summary>
+			<remarks>
+			<para>
+			During indexing, the dtSearch Engine may need to create temporary files to store
+			word lists that are too large to fit into memory.  By default, these files will be
+			placed in the index folder.  Use this setting to specify a different location
+			for the word lists.  The indexer will automatically delete the word list files
+			when the index update completes.
+			</para>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.IndexingFlags">
+			<summary>
+			Flags controlling the indexing of documents.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.AutoCommitIntervalMB">
+			<summary>
+			Number of megabytes to index before committing the index update.
+			</summary>
+			<remarks>
+			By default, an index update will commit after all documents have been indexed.
+			With version 7 indexes, an index can commit periodically during an update, so
+			newly-indexed documents will be searchable before the index update is complete.
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.IndexJob.IndexesToMerge">
+			<summary>
+			Indexes to merge into the target index, which is IndexPath.   (ActionMerge must be true for the merge to occur.)  For each index, provide the full path to the index.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.IndexJob.IsThreadDone(System.Int32,dtSearch.Engine.IndexProgressInfo)">
+			<summary>
+			Checks whether an IndexJob started using ExecuteInThread is done, and also
+			gets information on the state of the index update.
+			</summary>
+			<param name="waitTimeMillis">Number of milliseconds to wait of if the thread is not done.</param>
+			<param name="status">Structure to update with the current
+			state of the index update (can be null).</param>
+			<returns>
+			True if the thread is done, or false if the thread is still running.
+			</returns>
+			<remarks>
+			<para>
+			An application that loops calling IsThreadDone() should call Sleep() between
+			calls to allow the indexing thread to run.  Otherwise a high percentage
+			if CPU resources will be spent just processing IsThreadDone calls.
+			</para>
+			<para>
+			If waitTimeMillis is greater than zero, IsThreadDone will automatically
+			wait up to waitTimeMillis milliseconds for the thread to complete before
+			returning false.
+			</para>
+			</remarks>
+		</member>
+		<member name="M:dtSearch.Engine.IndexJob.Execute">
+			<summary>
+			Executes the IndexJob and returns when the job is complete.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.IndexJob.ExecuteInThread">
+			<summary>
+			Starts a separate thread to execute the IndexJob and returns immediately.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.IndexJob.AbortThread">
+			<summary>
+			Aborts an IndexJob started using ExecuteInThread.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.IndexJob.AbortThreadImmediate">
+			<summary>
+			Aborts an IndexJob started using ExecuteInThread, without saving anything indexed so far.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.IndexJob.GetIndexInfo(System.String)">
+			<summary>
+			Get information about the current state of an index
+			</summary>
+			<param name="indexPath">Location of the index</param>
+			<returns>
+			IndexInfo containing the current state of the index.  IndexInfo is
+			returned even if the index could not be accessed.
+			</returns>
+		</member>
+	<member name="T:dtSearch.Engine.JobErrorInfo">
+		<summary>
+		Records error messages after an IndexJob, SearchJob, FileConverter, etc.
+		</summary>
+		<remarks>
+		For each error, a code and a string message are returned.  A single job
+		may return more than one error.  Use the ErrorCodes enumeration to
+		interpret the value of ErrorCode.
+		</remarks>
+	</member>
+		<member name="P:dtSearch.Engine.JobErrorInfo.Count">
+			<summary>
+			Number of errors
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.Options">
+		<summary>
+		Sets indexing and searching option settings.
+		</summary>
+		<remarks>
+		For more information about how these options affect indexing and searching, see the
+		<see href="dtengine.chm::/Options_Overview.htm">"Options Overview"</see>
+		section of the dtSearch Engine help file
+		</remarks>
+	</member>
+		<member name="P:dtSearch.Engine.Options.TextFlags">
+			<summary>
+			Flags that control text-processing options
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.Options.UnicodeFilterMinTextSize">
+			<summary>
+			Minimum length of a run of text when applying the Unicode Filtering algorithm.
+			</summary>
+			<remarks>
+			This option specifies how many text characters must occur consecutively for a block of text to be included.
+			At the default value, 6, a series of 5 text characters surrounded by non-text data would be filtered out.
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.Options.UnicodeFilterWordOverlapAmount">
+			<summary>
+			Amount of overlap when automatically breaking words when applying the Unicode Filtering algorithm.
+			</summary>
+			<remarks>
+			<para>
+			Unicode Filtering can automatically break long runs of letters into words each time more than
+			Options.MaxWordLength consecutive letters are found.   By default, a word break is inserted
+			and the next word starts with the following character.  Set UnicodeFilterWordOverlapAmount
+			and also set the dtsoUfAutoWordBreakOverlapWords flag in UnicodeFilterFlags
+			to start the next word before the end of the previous word.
+			</para>
+			<para>
+			For example, suppose the maximum word length is set to 8, and
+			the following run of letters is found:  aaaaahiddenaaaaa.
+			By default, this would be indexed as aaaaahid and denaaaa, which
+			means that a search for *hidden* would not find it.   With a word overlap
+			of 4, this would be indexed as:  aaaaahid, ahiddena, denaaaaa
+			which would allow the embedded word "hidden" to be found in a search for
+			*hidden*.
+			</para>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.Options.UnicodeFilterFlags">
+			<summary>
+			Flags controlling the behavior of the Unicode Filtering algorithm.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.Options.UnicodeFilterBlockSize">
+			<summary>
+			Specifies how each input file is divided into blocks before being filtered.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.Options.UnicodeFilterRanges">
+			<summary>
+			Indicates Unicode ranges that are of interest when filtering.
+			</summary>
+			<remarks>
+			This is used to help the filtering algorithm to distinguish text from non-text data.
+			It is only used as a hint in the algorithm, so if the text extraction algorithm detects text in another language with a sufficient level of confidence, it will return that text even if the language was not selected.
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.Options.AlphabetFile">
+			<summary>
+			Name of dtSearch alphabet file to use when parsing text into words.
+			</summary>
+			<remarks>
+			<para>
+			The alphabet file determines which characters are letters and what the rules are for handling capitalization and punctuation. If blank, a default alphabet will be created based on information supplied by Windows
+			</para>
+			<para>
+			The alphabet file only controls the indexing of characters in the range 32-127.  Unicode character properties
+			control the treatment of other characters.
+			</para>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.Options.MatchDigitChar">
+			<summary>
+			Wildcard character that matches a single digit (default: "=").
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.Options.WeightChar">
+			<summary>
+			Character used to indicate term weighting (example: <i>apple:5</i>)
+			</summary>
+			<remarks>
+			The prefix used to add field name in front of a word in an xfilter expression
+			is a doubling of the WeightChar (default "::").  For example, if you change
+			the WeightChar to !, then an xfilter expression with a field would
+			look like this:
+			<code>xfilter(word "FieldName!!Something")</code>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.Options.SynonymChar">
+			<summary>
+			Character that enables synonym searching for a search term.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.Options.StemmingChar">
+			<summary>
+			Character that enables stemming for a search term (default: "~").
+			</summary>
+			<remarks>
+			The expression used for range searching (default: "~~") a doubling of the
+			StemmingChar.
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.Options.PhonicChar">
+			<summary>
+			Character that enables phonic searching for a search term (default "#")
+			</summary>
+			<remarks>
+			The regular expression mark ("##") is a doubling of the PhonicChar.
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.Options.FuzzyChar">
+			<summary>
+			Character that enables fuzzy searching for a search term (default: "%")
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.Options.MacroChar">
+			<summary>
+			Character that indicates that a search term is a macro (default: "@")
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.Options.FieldFlags">
+			<summary>
+			Flags that control indexing of metadata.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.Options.UpdateFiles">
+			<summary>
+			Set to true to force all configuration files to be re-read when Save() is called.
+			</summary>
+			<remarks>
+			If the contents of a configuration file such as TextFieldsFile changes, but
+			the filename is not changed, set UpdateFiles=true to indicate that dtSearch should
+			discard any internally-cached copies of configuration files and re-read them
+			from disk.
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.Options.TextFieldsFile">
+			<summary>
+			Name of the file containing rules for extraction of field data from text files based on markers in the next
+			</summary>
+			<remarks>
+			The TextFieldsFile is an XML file.  To create the file, start dtSearch Desktop,
+			click <b>Options &gt; Preferences &gt; Text Fields</b>
+			and use the dialog box to set up the text field definitions.   The XML file will be saved as fields.xml
+			in your dtSearch UserData folder.
+			See <see href="http://support.dtsearch.com/webhelp/dtsearch/text_fields.htm">Define Text Fields</see> in the dtSearch Desktop help for information on this setting.
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.Options.FileTypeTableFile">
+			<summary>
+			Name of the file containing a table of filename patterns for file formats that dtSearch cannot detect automatically, such as older versions of WordStar
+			</summary>
+			<remarks>
+			The FileTypeTableFile is an XML file.  To create the file, start dtSearch Desktop,
+			click <b>Options &gt; Preferences &gt; File Types</b>
+			and use the dialog box to set up the file type definitions.   The XML file will be saved as filetype.xml
+			in your dtSearch UserData folder.
+			See <see href="http://support.dtsearch.com/webhelp/dtsearch/file_types.htm">File Types</see> in the dtSearch
+			Desktop help for information on this setting.
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.Options.BooleanConnectors">
+			<summary>
+			Use to replace the default connectors used in search requests.
+			</summary>
+			<remarks><para>
+			The BooleanConnectors option setting lets you change the connectors that dtSearch uses in boolean searches (and, or, not, etc.)
+			</para><para>
+			The default connectors are: AND, OR, NOT, W/, CONTAINS, and TO.
+			</para><para>
+			To replace the default connectors with alternative connectors (i.e., in French) set BooleanConnectors to a series of items each of which consists of a connector string and the equivalent English connector, in this format:
+			</para><code>
+			{new connector=connector name}
+			</code><para>For example:</para><code>
+			{et=and} {ou=or} {sauf=not} {m/=w/} {contient=contains} {and=and} {or=or} {not=not} {contains=contains} {w/=w/} {to=to}
+			</code>
+			<para>
+			The standard English connectors are included as well as the French connectors in this example.
+			If BooleanConnectors is not blank, the connectors it defines will replace the defaults, so dtSearch will
+			not recognize and, or, not, etc.  To restore the default English connectors, add an item for each connector
+			to the list, as in the above example. It is possible to have more than one way of expressing each type of
+			connector so, for example, "and" or "et" both are equivalent to the default "AND" connector.
+			</para><para>
+			Text in connectors must consist entirely of searchable letters. Punctuation characters that are not searchable letters cannot be used as part of a connector. The only exception to this rule is the w/N syntax for proximity searches, which allows w/ to be redefined as any single letter (a-z only) followed by a /.
+			</para>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.Options.PrivateDir">
+			<summary>
+			A directory that the dtSearch Engine can use to store temporary files.  Most applications should not set PrivateDir.
+			</summary>
+			<remarks>
+			<para>
+			PrivateDir, if non-blank, must be unique for each concurrent user of the dtSearch Engine.
+			</para>
+			<para>
+			If the privateDir is blank, no directory will be reserved for temporary files, and dtSearch will use
+			the Windows GetTempPath() call to get a directory for temporary files.
+			</para>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.Options.HomeDir">
+			<summary>
+			Directory where the dtSearch Engine and support files are located.
+			</summary>
+			<remarks>
+			<para>
+			This may be a shared, read-only network directory, and is usually the folder where dten600.dll is located.
+			</para>
+			<para>
+			The dtSearch Engine automatically loads external file parser DLLs from the <b>viewers</b>
+			subdirectory of the HomeDir directory.  If no Home directory is supplied, the dtSearch Engine will
+			attempt to determine the location of its home directory using Windows system calls. Often this will work, but it is better to supply a specific Home directory.
+			</para>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.Options.UserThesaurusFile">
+			<summary>
+			User-defined synonym sets.
+			</summary>
+			<remarks>
+			The UserThesaurusFile is an XML file.  To create the file, start dtSearch Desktop,
+			click <b>Options &gt; Preferences &gt; User Thesaurus</b>
+			and use the dialog box to set up the synonym definitions.   The XML file will be saved as thesaur.xml
+			in your dtSearch UserData folder.
+			See <see href="http://support.dtsearch.com/webhelp/dtsearch/user_thesaurus.htm">User Thesaurus</see> in the dtSearch
+			Desktop help for information on this setting.
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.Options.SegmentationRulesFile">
+			<summary>
+			File segmentation rules, used to split up long text files into logical subdocuments during indexing.
+			</summary>
+			<remarks>
+			The SegmentationRulesFile is an XML file.  To create the file, start dtSearch Desktop,
+			click <b>Options &gt; Preferences &gt; File Segmentation Rules</b>
+			and use the dialog box to set up the rules.   The XML file will be saved as fileseg.xml
+			in your dtSearch UserData folder.
+			See <see href="http://support.dtsearch.com/webhelp/dtsearch/file_segmentation.htm">File Segmentation Rules</see> in the dtSearch
+			Desktop help for information on this setting.
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.Options.MaxWordLength">
+			<summary>
+			Words longer than the maxWordLength will be truncated when indexing. The default maxWordLength is 32.
+			The maximum value is 128.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.Options.XmlIgnoreTags">
+			<summary>
+			Comma-separated list of tags to ignore when indexing XML
+			</summary>
+			<remarks>
+			If your XML data includes HTML tags like &lt;P&gt;, &lt;B&gt;, &lt;I&gt;, etc., use XmlIgnoreTags
+			to prevent these tags from affecting the field structure of XML.  Example:
+			<code>
+			options.XmlIgnoreTags = "b,p,i,u,h1,h2,h3,br,hr"
+			</code>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.Options.TitleSize">
+			<summary>
+			By default, the dtSearch Engine collects the first 80 characters of text from a file for the title associated with each document. Use this option to change the number of characters stored, up to a maximum of 512.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.Options.MaxStoredFieldSize">
+			<summary>
+			Maximum size of a single stored field.  Stored fields are field data collected during indexing that is returned in search results.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.Options.MaxFieldNesting">
+			<summary>
+			Maximum depth of nested fields (value must be between 1 and 32)
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.Options.MaxWordsToRetrieve">
+			<summary>
+			Maximum number of words that can be matched in a search. This can be any value from 16 to 256k. The default is 64k. If a search matches more unique words than the maxWordsToRetrieve limit, the error code dtsErMaxWords (137) will be returned.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.Options.NoiseWordFile">
+			<summary>
+			List of noise words to skip during indexing (default: "noise.dat")
+			</summary>
+			<remarks>
+			<para>
+			A noise word is a word such as the or if that is so common that it is not useful in searches. To save time, noise words are not indexed and are ignored in index searches.
+			</para>
+			<para>
+			When an index is created, dtSearch copies the list of words from noise.dat into the index directory and also builds the word list into other index files. After an index is created, subsequent changes to the noise word list will not affect indexing for that index
+			</para>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.Options.StemmingRulesFile">
+			<summary>
+			Stemming rules for stemming searches (default: "stemming.dat")
+			</summary>
+			<remarks>
+			The stemming.dat file uses a plain text file and includes comments in the file
+			that describe the file format.
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.Options.BinaryFilterTextChars">
+			<summary>
+			Define characters considered to be text if Options.BinaryFiles is set ot dtsoFilterBinary
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.Options.IndexNumbers">
+			<summary>
+			If false, any word that begins with a digit will not be indexed.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.Options.Hyphens">
+			<summary>
+			Controls the treatment of hypyens
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.Options.BinaryFiles">
+			<summary>
+			Controls the treatment of binary files.
+			</summary>
+			<remarks>
+			Binary files are files that are not in a format that dtSearch recognizes and that do not appear to be plain text files.
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.Options.StoredFieldDelimiterChar">
+			<summary>
+			Delimiter between multiple instances of a stored field in a single file (default: " ")
+			</summary>
+			<remarks>
+			This must be a single character in the range 1-127.
+			</remarks>
+		</member>
+		<member name="M:dtSearch.Engine.Options.Save">
+			<summary>
+			Apply changes to Options.
+			</summary>
+			<remarks>
+			Changes to options are applied when you call Save().   They are not really saved anywhere,
+			so options must be set up each time your program runs.
+			</remarks>
+		</member>
+	<member name="T:dtSearch.Engine.SearchFilter">
+		<summary>
+		Filters a search to allow only selected documents from an index to be returned.
+		</summary>
+		<remarks>
+		<para>
+		The SearchFilter object provides a way to designate which documents can be returned by a search. It is useful in situations where a text search using must be combined with a search of a database. The database search is done first, and then the results of the database search are used to limit the dtSearch search.
+		</para>
+		<para>
+		<b>Document Ids</b>
+		</para>
+		<para>
+		Search filters do not use names to identify documents because a filter may specify thousands,
+		or hundreds of thousands, of documents, and a table of filenames would take too much memory
+		and would take too long to check. Instead, each document is identified by (a) the index it
+		belongs to, and (b) the document's DocId, a unique integer that is assigned to each document
+		in an index. The docId for a document can be obtained by searching for the document by name,
+		and then examining the document's properties in search results. It can also be obtained during
+		indexing by using the <see cref="T:dtSearch.Engine.DataSource">DataSource</see>
+		abstract class as the base for your data source implementation.
+		</para>
+		<para>
+		A docId that is selected may be returned in search results. A document that is not selected will not be returned in search results, even if it otherwise satisfies the search request.
+		</para>
+		<para>
+		If the criteria for the SearchFilter can be expressed as one or more search requests, you can use SelectItemsBySearch to select documents in the SearchFilter.
+		</para>
+		<para>
+		<b>Indexes and Index identifiers</b>
+		</para>
+		<para>
+		A search filter can cover any number of indexes. To add an index to a search filter, call addIndex() with the full path to the index. The path must be expressed exactly as it will be expressed in the search job. The AddIndex() method returns an integer that is used to identify that index when selecting and de-selecting documents for the filter. (This makes the selection and de-selection functions, which may be called thousands of times, more effiicent.)
+		</para>
+		<para>
+		<b>Implementation</b>
+		</para>
+		<para>
+		A search filter is implemented in the dtSearch Engine using a table of bit vectors, one for each index in the filter. Each bit vector has one bit for each document in its index. For example, a search filter for a single index with 1,000,000 documents would have 1,000,000 bits, or 125 kilobytes of data.
+		</para>
+		</remarks>
+	</member>
+		<member name="M:dtSearch.Engine.SearchFilter.AddIndex(System.String)">
+			<summary>
+			Add an index to the filter, returning an integer that can be used to identify the index in the selection functions.
+			</summary>
+			<param name="indexPath">Full path to the index to add to the filter.</param>
+			<returns>
+			Integer to be used as whichIndex in the Select methods.
+			</returns>
+		</member>
+		<member name="M:dtSearch.Engine.SearchFilter.SelectAll(System.Int32)">
+			<summary>
+			Select all of the documents in the index.
+			</summary>
+			<param name="whichIndex">Integer identifying the index in this SearchFilter (obtained from AddIndex)</param>
+		</member>
+		<member name="M:dtSearch.Engine.SearchFilter.SelectNone(System.Int32)">
+			<summary>
+			Select no documents in the index.
+			</summary>
+			<param name="whichIndex">Integer identifying the index in this SearchFilter (obtained from AddIndex)</param>
+		</member>
+		<member name="M:dtSearch.Engine.SearchFilter.SelectItems(System.Int32,System.Int32,System.Int32,System.Boolean)">
+			<summary>
+			Set the selection state of a range of document ids, from firstItem to lastItem, to the selection state indicated by fSelected.
+			</summary>
+			<param name="whichIndex">Integer identifying the index in this SearchFilter (obtained from AddIndex)</param>
+			<param name="firstItem">Document id of the first document in the range to select.</param>
+			<param name="lastItem">Document id of the last document in the range to select.</param>
+			<param name="isSelected">Selection state to assign to the documents in the range.</param>
+		</member>
+		<member name="M:dtSearch.Engine.SearchFilter.SelectItemsBySearch(System.Int32,System.String,System.Boolean)">
+			<summary>
+			Set the selection state of all documents in an index that match search request.
+			</summary>
+			<param name="whichIndex">Integer identifying the index in this SearchFilter (obtained from AddIndex)</param>
+			<param name="searchRequest">Search request to select documents</param>
+			<param name="isSelected">Selection state to assign to documents   </param>
+			<note>You can also use SearchJob.WantResultsAsFilter to create a SearchFilter from the results of a search.  Using SearchJob.WantResultsAsFilter is more flexible than SelectItemsBySearch because you can use any of the properties of the SearchJob (search flags, FileConditions, etc.) rather than just a simple search request.</note>
+		</member>
+		<member name="M:dtSearch.Engine.SearchFilter.And(dtSearch.Engine.SearchFilter)">
+			<summary>
+			Combine this filter with another filter in a logical "AND" operation.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.SearchFilter.AndNot(dtSearch.Engine.SearchFilter)">
+			<summary>
+			Combine this filter with another filter in a logical "AND NOT" operation.
+			</summary>
+			<param name="other">SearchFilter to be combined with this filter (the other SearchFilter is not modified)</param>
+		</member>
+		<member name="M:dtSearch.Engine.SearchFilter.Or(dtSearch.Engine.SearchFilter)">
+			<summary>
+			Combine this filter with another filter in a logical "OR" operation.
+			</summary>
+			<param name="other">SearchFilter to be combined with this filter (the other SearchFilter is not modified)</param>
+		</member>
+		<member name="M:dtSearch.Engine.SearchFilter.Equals(dtSearch.Engine.SearchFilter)">
+			<summary>
+			Compare two SearchFilters for equality.
+			</summary>
+			<param name="other">SearchFilter to be compared</param>
+		</member>
+		<member name="M:dtSearch.Engine.SearchFilter.Read(System.String)">
+			<summary>
+			Read the search filter from a disk file.
+			</summary>
+			<param name="filename">Full path to the file to read.</param>
+		</member>
+		<member name="M:dtSearch.Engine.SearchFilter.Write(System.String)">
+			<summary>
+			Save the search filter to a disk file.
+			</summary>
+			<param name="filename">Full path to the file to write.</param>
+		</member>
+		<member name="M:dtSearch.Engine.SearchFilter.ReadMultiple(System.String)">
+			<summary>
+			Read a series of search filters from disk files.
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.SearchResultsItem">
+		<summary>
+		Information about a document retrieved in a search.
+		</summary>
+		<remarks>
+		<para>
+		SearchResultsItem is returned through the OnFound callback
+		in ISearchSearchStatusHandler, and from SearchResults.
+		</para>
+		<para>
+		Information returned through OnFound will be incomplete
+		if the dtsSearchDelayDocInfo flag was used in the search,
+		because the callback is called without reading document
+		information records from the index.
+		</para>
+		</remarks>
+	</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.Filename">
+			<summary>
+			Name of the document as it is stored in the index.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.DisplayName">
+			<summary>
+			If non-blank, a user-friendly name to display for the document (for example, the title of an HTML document).
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.Title">
+			<summary>
+			The first 80 text characters of the document.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.Location">
+			<summary>
+			The folder where the document is located.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.ShortName">
+			<summary>
+			The name of the document, without the path.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.HitCount">
+			<summary>
+			Number of hits found in this document.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.Hits">
+			<summary>
+			Word offsets of hits found in this document.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.WordCount">
+			<summary>
+			Number of words in this document when it was indexed.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.Size">
+			<summary>
+			Size of this document when it was indexed.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.Score">
+			<summary>
+			Relevance score for this document.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.DocId">
+			<summary>
+			An integer that uniquely identifies each document in an index.
+			</summary>
+			<remarks>
+			<para>
+			Each document in an index is assigned a unique integer identifier called a "DocId" or document id.  The first document added to an index has the DocId 1, and subsequent documents will have sequentially numbered DocIds 2, 3, 4, and so forth.  When a document is reindexed, its DocId is "cancelled" and a new DocId is assigned.  Compressing an index renumbers all of the DocIds, so after an index has been compressed, a document's DocId may change.
+			</para>
+			<para>
+			DocIds are used in:
+			<list type="bullet">
+			<item><description>
+			SearchFilter objects, which use DocIds to identify the documents selected in the filter.
+			</description></item>
+			<item><description>
+			SearchResults.AddDoc, which lets you add a document to a SearchResults list by providing the index path and the DocId.   You can use this to get the properties of the document from its DocId.
+			</description></item>
+			<item><description>
+			The IndexJob.ToRemoveListName list, which lets you remove documents from an index either by name or by DocId.
+			</description></item>
+			</list>
+			</para>
+			</remarks>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.WhichIndex">
+			<summary>
+			Integer identifying the index that the document was retrieved from, in the IndexesToSearch array
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.TypeId">
+			<summary>
+			Type id of the document
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.IndexedBy">
+			<summary>
+			dtSearch Engine build number used to index this document
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.IndexRetrievedFrom">
+			<summary>
+			Full path to the index this document was found in.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.Synopsis">
+			<summary>
+			Hits-in-context string from SearchReportJob.
+			</summary>
+			<remarks>
+			Stored by SearchReportJob if dtsReportStoreInResults flag was used when the SearchReportJob was executed
+			</remarks>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.HitDetails">
+			<summary>
+			Details on words matched in this document.
+			</summary>
+			<remarks>
+			The HitDetails array is generated when the dtsSearchWantHitDetails search flag is used.
+			</remarks>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.HitsByWord">
+			<summary>
+			By-word summary of hits found in this document.
+			</summary>
+			<remarks>
+			The HitsByWord array is generated when the dtsSearchWantHitsByWord search flag is used in a search.
+			</remarks>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.UserFields">
+			<summary>
+			Field-value pairs found in this document when the document was indexed.
+			</summary>
+			<remarks>
+			When a document is indexed, dtSearch will store any field-value pairs found in the document
+			when the field name matches one of the <see cref="P:dtSearch.Engine.Indexjob.StoredFields">StoredFields</see>
+			in the IndexJob.
+			</remarks>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.ScorePercent">
+			<summary>
+			Relevance score for this document, expressed as a percentage (0-100) of the highest-scoring document in the search.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.PhraseCount">
+			<summary>
+			Number of hits in this document, counting each phrase as one hit.  This is only available if the dtsSearchWantHitsByWord
+			flag was set in SearchJob.SearchFlags.
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.ModifiedDate">
+			<summary>
+			Modification date of the document (UTC)
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.CreatedDate">
+			<summary>
+			Creation date of the document (UTC)
+			</summary>
+		</member>
+		<member name="F:dtSearch.Engine.SearchResultsItem.VetoThisItem">
+			<summary>
+			Use to prevent an item from being added to SearchResults in the OnFound callback.
+			</summary>
+			<remarks>
+			In the OnFound callback in ISearchStatusHandler, set VetoThisItem = true to prevent
+			the item from being included in search results.
+			</remarks>
+		</member>
+	<member name="T:dtSearch.Engine.ISearchStatusHandler">
+		<summary>
+		Interface for SearchJob.StatusHandler.
+		</summary>
+		<remarks>
+		Use SearchJob.StatusHandler to request a callback each time a document is found,
+		and to monitor the progress of a search.
+		</remarks>
+	</member>
+		<member name="M:dtSearch.Engine.ISearchStatusHandler.OnFound(dtSearch.Engine.SearchResultsItem)">
+			<summary>
+			Called each time a document is found
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.ISearchStatusHandler.OnSearchingFile(System.String)">
+			<summary>
+			Called when an indexed is searched
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.ISearchStatusHandler.OnSearchingIndex(System.String)">
+			<summary>
+			Called when a file is searched in an unindexed search.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.ISearchStatusHandler.CheckForAbort()">
+			<summary>
+			Called during a search to check whether the search should be halted
+			</summary>
+			<returns>
+			Return dtsAbort to abort the search, or dtsContinue to let the
+			search continue
+			</returns>
+		</member>
+	<member name="T:dtSearch.Engine.SearchJob">
+		<summary>
+		Use to search indexes or to search without an index.
+		</summary>
+	</member>
+		<member name="P:dtSearch.Engine.SearchJob.Request">
+			<summary>
+			What to search for.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchJob.IndexesToSearch">
+			<summary>
+			The full path of each index to search.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchJob.IncludeFilters">
+			<summary>
+			Filename filters to select documents to search in an unindexed search.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchJob.ExcludeFilters">
+			<summary>
+			Filename filters to exclude documents from the search in an unindexed search.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchJob.BooleanConditions">
+			<summary>
+			Additional boolean conditions that a document must meet to be retrieved in a search.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchJob.FileConditions">
+			<summary>
+			File conditions that a document must meet to be retrieved in a search.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchJob.FoldersToSearch">
+			<summary>
+			In an unindexed search, the directories or files to search.
+			</summary>
+			<remarks>
+			<para>
+			To specify a directory and its subdirectories,
+			add &lt;+&gt; (less than, plus, greater than) following the directory name.
+			</para>
+			<para>
+			To specify one or more files, add the filenames to the FoldersToSearch list.
+			This is more efficient
+			than specifying the folder name in FoldersToSearch and the filename in IncludeFilters,
+			because it eliminates the need for a directory scan to locate the file.
+			</para>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.SearchJob.AutoStopLimit">
+			<summary>
+			Set to a non-zero value to make the search automatically stop when this many documents were found.
+			</summary>
+			<remarks>
+			AutoStopLimit causes a search to halt automatically when a specified number of documents have been found. This provides a way to limit the resources consumed by searches that retrieve a very large number of documents. When the number of files retrieved reaches the autoStopLimit value, the search will immediately halt, and the code dtsErSearchLimitReached will be returned through the error handler for the search job. If the AutoStopLimit is 0, the search will not halt.
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.SearchJob.Fuzziness">
+			<summary>
+			If non-zero, the engine will match words that are close to but not identical to a search term.
+			</summary>
+			<remarks>
+			Fuzziness can range from 1 to 10.  The higher the fuzziness value, the more differences
+			are tolerated when matching words, and the closer to the front of the word these differences
+			can occur.
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.SearchJob.MaxFilesToRetrieve">
+			<summary>
+			Limit the maximum size of search results to a specified number of files.
+			</summary>
+			<remarks>
+			<para>
+			When MaxFilesToRetrieve is non-zero, it controls the maximum size of the SearchResults
+			that can be returned after a search.  The most relevant documents from all matching
+			documents in the index will be included in SearchResults.
+			</para>
+			<para>
+			Regardless of the MaxFilesToRetrieve setting, SearchJob.FileCount will return the a count
+			that includes <i>all</i> matching documents.  MaxFilesToRetrieve limits the number
+			of items saved in SearchResults, but it does not stop the search before all matching
+			documents have been identified.
+			</para>
+			<para>
+			For example, if you set MaxFilesToRetrieve=10 and AutoStopLimit=5000, then SearchResults will
+			contain the 10 most relevant documents from the first 5000 found.  Documents after the first 5000
+			found will not be considered, because AutoStopLimit=5000 will force the search to halt
+			after 5000 matching documents are found.
+			</para>
+			<para>
+			If the dtsSearchSelectMostRecent flag is set in SearchFlags, the most <i>recent</i> documents
+			will be returned instead of the most relevant.
+			</para>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.SearchJob.SearchFlags">
+			<summary>
+			Flags controlling various search options.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchJob.TimeoutSeconds">
+			<summary>
+			Set to a non-zero value to force the search to halt after a specified time.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchJob.HitCount">
+			<summary>
+			After a search, contains the number of hits in all files retrieved.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchJob.FileCount">
+			<summary>
+			After a search, contains the number of files retrieved (this is the
+			total number of documents matched, regardless of the MaxFilesToRetrieve setting).
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchJob.Errors">
+			<summary>
+			Contains any error messages generated during the search.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchJob.Results">
+			<summary>
+			Returns the results of the search.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchJob.ResultsAsFilter">
+			<summary>
+			A SearchFilter with all matching documents selected
+			</summary>
+			<remarks>
+			<para>
+			If WantResultsAsFilter was set to true before the search was executed, ResultsAsFilter
+			will hold a SearchFilter based on the results of the search.  Each document retrieved
+			in the search will be selected in the filter.
+			</para>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.SearchJob.StatusHandler">
+			<summary>
+			Object to receive callback notifications when documents are found.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.SearchJob.IsThreadDone">
+			<summary>
+			Checks whether a SearchJob started using ExecuteInThread is done.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.SearchJob.SetFilter(dtSearch.Engine.SearchFilter)">
+			<summary>
+			Apply a search filter to the search that can be used to exclude or permit specified documents to be returned in search results.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.SearchJob.Execute">
+			<summary>
+			Executes the search and returns when the search is complete.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.SearchJob.ExecuteInThread">
+			<summary>
+			Starts a separate thread to execute the IndexJob and returns immediately.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.SearchJob.IsThreadDoneWait(System.Int32)">
+			<summary>
+			Returns true immediately if the thread is done; otherwise
+			waits up to millisecondsToWait for the thread to finish,
+			then returns false if the thread is not done yet.
+			</summary>
+			<param name="millisecondsToWait">Number of milliseconds to wait, if the thread is not done yet.</param>
+		</member>
+		<member name="M:dtSearch.Engine.SearchJob.AbortThread">
+			<summary>
+			Aborts a SearchJob started using ExecuteInThread.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchJob.WantResultsAsFilter">
+			<summary>
+			If set to true before a search, after the search ResultsAsFilter will contain
+			a SearchFilter with all of the documents retrieved in this search.
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.SearchReportJob">
+		<summary>
+		Generates a report showing each hit in one or more documents, with a specified amount of context
+		</summary>
+		<remarks>
+		<para>
+		Use BeforeHit and AfterHit to insert hit highlight markings (for example, &lt;b&gt;
+		and &lt;/b&gt; in HTML files).
+		</para>
+		</remarks>
+	</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.OutputFile">
+			<summary>
+			File to write search report to.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.BeforeHit">
+			<summary>
+			Text to be inserted before each hit in the report to highlight hits.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.AfterHit">
+			<summary>
+			Text to be inserted after each hit in the report.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.Header">
+			<summary>
+			Text to appear at the top of the report.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.Footer">
+			<summary>
+			Text to appear after the end of the report.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.FileHeader">
+			<summary>
+			Text to appear at the start of each document in the report.
+			</summary>
+			<remarks>
+			Use the following symbols to insert file information into the header.
+			<list type="table">
+			<ListHeader>
+			<term>Symbol</term><description>Meaning</description>
+			</ListHeader>
+			<item>
+			<term>%%Filename%%</term>
+			<description>The name of the file (without path information). For PDF and HTML files, this will be the Title.</description>
+			</item>
+			
+			<item>
+			<term>%%Location%%</term>
+			<description>The location of the file</description>
+			</item>
+			<item>
+			<term>%%Fullname%%</term>
+			<description>The path and filename of the file.</description></item>
+			<item>
+			<term>%%Size%%</term>
+			<description>File size in bytes</description></item>
+			<item><term>%%Date%%</term>
+			<description>Modification date of the file when indexed</description>
+			</item>
+			<item>
+			<term>%%Hits%%</term>
+			<description>Number of hits in the file</description>
+			</item>
+			<item>
+			<term>%%Title%%</term>
+			<description>The first 80 characters of the file</description>
+			</item>
+			</list>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.FileFooter">
+			<summary>
+			Text to appear after each document in the report.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.ContextHeader">
+			<summary>
+			Text to appear at the start of each block of context in the report.
+			</summary>
+			<remarks>
+			Use the following symbols to insert file information into the context header.
+			<list type="table">
+			<ListHeader>
+			<term>Symbol</term><description>Meaning</description>
+			</ListHeader>
+			<item>
+			<term>%%Filename%%</term>
+			<description>The name of the file (without path information). For PDF and HTML files, this will be the Title.</description>
+			</item>
+			<item>
+			<term>%%Page%%</term>
+			<description>
+			Page number where the hit occurs</description>
+			</item>
+			<item>
+			<term>%%Paragraph%%</term>
+			<description>Paragraph number where the hit occurs (relative to the start of the page)</description>
+			</item>
+			<item>
+			<term>%%Word%%</term>
+			<description>Word offset of the block of context from the beginning of the file.</description>
+			</item>
+			<item>
+			<term>%%FirstHit%%</term>
+			<description>Word offset of the first hit in this block of context.</description>
+			</item>
+			</list>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.ContextFooter">
+			<summary>
+			Text to appear after each block of context in the report.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.ContextSeparator">
+			<summary>
+			Text to appear between blocks of context in the report (after one ContextFooter, before the next ContextHeader)
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.MaxWordsToRead">
+			<summary>
+			Number of words to scan in each document looking for blocks of context to include in the report.
+			</summary>
+			<remarks>
+			For example, if maxWordsToRead=5000, then the search report will only include hits that occur in the first 5000 words in each document. This setting can be used to generate faster (but not necessarily complete) reports by limiting the search report to hits near the beginning of each document
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.MaxContextBlocks">
+			<summary>
+			Number of blocks of context to include in the report for each document.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.WordsOfContext">
+			<summary>
+			Approximate number of words of context to include around each hit.
+			</summary>
+			<remarks>
+			Use setWordsOfContextExact to get exactly the requested number of words,
+			and use setWordsOfContext to get whole paragraphs with at least the requested number of words
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.WordsOfContextExact">
+			<summary>
+			Number of words of context to include around each hit.
+			</summary>
+			<remarks>
+			Use setWordsOfContextExact to get exactly the requested number of words,
+			and use setWordsOfContext to get whole paragraphs with at least the requested number of words
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.ParagraphsOfContext">
+			<summary>
+			Number of paragraphs of context to include around each hit.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.OutputFormat">
+			<summary>
+			The file format of the output.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.OutputStringMaxSize">
+			<summary>
+			Maximum number of characters to generate in the OutputString, when OutputToString is true.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.TimeoutSeconds">
+			<summary>
+			Set to a non-zero value to make the job terminate automatically after a specified number of seconds.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.Flags">
+			<summary>
+			Flags controlling generation of the report.
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.OutputToString">
+			<summary>
+			Generate output to a string (OutputString), rather than to a file (OutputFile).
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.OutputString">
+			<summary>
+			Result of the search report, if OutputToString was set to true
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchReportJob.Errors">
+			<summary>
+			Contains any errors that occurred during generation of the search report.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.SearchReportJob.SelectAll">
+			<summary>
+			Select all items in the SearchResults.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.SearchReportJob.ClearSelections">
+			<summary>
+			Select no items in the SearchResults.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.SearchReportJob.SelectItems(System.Int32,System.Int32)">
+			<summary>
+			Select a range of items in the SearchResults.
+			</summary>
+			<remarks>
+			iFirstItem and iLastItem are 0-based indexes into the SearchResults list, so
+			the range of permissible values is 0 to Count-1.
+			</remarks>
+		</member>
+		<member name="M:dtSearch.Engine.SearchReportJob.Execute">
+			<summary>
+			Generate the report.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.SearchReportJob.SetResults(dtSearch.Engine.SearchResults)">
+			<summary>
+			The search results list that this SearchReportJob will use.
+			</summary>
+			<remarks>
+			The SearchResults will be attached automatically if you used its NewSearchReportJob method to create this job.
+			</remarks>
+		</member>
+	<member name="T:dtSearch.Engine.SearchResults">
+		<summary>
+		List of documents retrieved in a search.
+		</summary>
+		<remarks>
+		<para>
+		After a search, SearchJob.Results will contain a SearchResults listing the documents
+		found in the search.
+		</para>
+		<para>
+		To access information about each document, call GetNthDoc() to select the document
+		in the list, then use CurrentItem to access its properties.
+		</para>
+		</remarks>
+	</member>
+		<member name="M:dtSearch.Engine.SearchResults.AddDoc(System.String,System.Int32,System.Int32[])">
+			<summary>
+			Add a document to SearchResults.
+			</summary>
+			<param name="indexPath">Path of the index that contains this document.</param>
+			<param name="docId">Document id of the document in the index.</param>
+			<param name="hits">Word offset of the hits in this document.</param>
+			<remarks>
+			
+			</remarks>
+		</member>
+		<member name="M:dtSearch.Engine.SearchResults.SetSortKey(System.String)">
+			<summary>
+			Set the sort key for the currently-selected document.
+			</summary>
+			<remarks>
+			SetSortKey provides a way to assign a string to each item in search results
+			to use as a sort key.   After each item has been assigned a sort key,
+			call Sort(SortFlags.dtsSortBySortKey) to sort SearchResults by the assigned
+			keys.
+			</remarks>
+		</member>
+		<member name="M:dtSearch.Engine.SearchResults.SerializeFromXml(System.String)">
+			<summary>
+			Fills a SearchResults object with data from an XML stream generated by SerializeAsXml
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.SearchResults.SerializeAsXml">
+			<summary>
+			Generates a stream of XML containing data in the search results list.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.SearchResults.UrlDecodeItem(System.String)">
+			<summary>
+			UrlDecodeItem converts a string created by UrlEncodeItem back into a search results item.
+			</summary>
+			<remarks>
+			UrlEncodeItem can be used to create HREFs to use in HTML search results.  When the user
+			clicks the link, the URL-encoded item will be sent as part of the Query String.
+			A server-based application that receives the URL-encoded item can then use UrlDecodeItem
+			to convert the data in the HREF back into a SearchResults object.  This eliminates the need
+			to keep the SearchResults object in memory between requests, making stateless operation
+			possible on web servers.
+			</remarks>
+		</member>
+		<member name="M:dtSearch.Engine.SearchResults.UrlEncodeItem">
+			<summary>
+			Creates a url-encoded string describing the currently-selected item in search results.
+			</summary>
+			<remarks>
+			UrlEncodeItem can be used to create HREFs to use in HTML search results.  When the user
+			clicks the link, the URL-encoded item will be sent as part of the Query String.
+			A server-based application that receives the URL-encoded item can then use UrlDecodeItem
+			to convert the data in the HREF back into a SearchResults object.  This eliminates the need
+			to keep the SearchResults object in memory between requests, making stateless operation
+			possible on web servers.
+			</remarks>
+		</member>
+		<member name="M:dtSearch.Engine.SearchResults.MakePdfWebHighlightFile">
+			<summary>
+			Generates xml data used to highlight hits in Adobe Reader through a web browser interface.
+			</summary>
+			<remarks>
+			See <i>Indexing and Searching Adobe Acrobat Files</i> in the dtSearch Engine help file for more information.
+			</remarks>
+		</member>
+		<member name="M:dtSearch.Engine.SearchResults.MakePdfHighlightFile">
+			<summary>
+			Deprecated -- use MakePdfWebHighlightFile
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.SearchResults.NewSearchReportJob">
+			<summary>
+			Creates a SearchReportJob that can be used to generate segments of context around each hit in one or
+			more documents.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.SearchResults.Sort(dtSearch.Engine.SortFlags,System.String)">
+			<summary>
+			Sorts the search results according to the value in flags, with an optional user-defined field name.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.SearchResults.GetNthDoc(System.Int32)">
+			<summary>
+			Select a document in search results.
+			</summary>
+			<param name="whichDoc">Integer between zero and Count-1 specifying the document to select.</param>
+			<remarks>
+			After selecting a document, use SearchResults.CurrentItem to access the properties of the document.
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.SearchResults.DocDetailItem(System.String)">
+			<summary>
+			Access a named property of the selected SearchResults item.
+			</summary>
+			<remarks>
+			<para>Use GetDocDetails to access all of the properties.</para>
+			<para>The GetDocDetails and GetDocDetailItem methods are provided for backward compatibility
+			with applications created using the old COM interface, and are deprecated.</para>
+			<para>CurrentItem provides an easier and more efficient way to access document properties.</para>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.SearchResults.DocDetails">
+			<summary>
+			Access all named properties of the selected SearchResults item.
+			</summary>
+			<remarks>
+			<para>Use GetDocDetails to access all of the properties.</para>
+			<para>The GetDocDetails and GetDocDetailItem methods are provided for backward compatibility
+			with applications created using the old COM interface, and are deprecated.</para>
+			<para>CurrentItem provides an easier and more efficient way to access document properties.</para>
+			</remarks>
+		</member>
+		<member name="M:dtSearch.Engine.SearchResults.GetHitByteOffsets">
+			<summary>
+			Calculate byte offset of each hit (for plain text files only)
+			</summary>
+			<remarks>
+			<para>
+			The easiest way to highlight hits in files retrieved with the dtSearch Engine is to use a FileConverter to convert the retrieved file to an HTML document with the hits highlighted. For plain text files, the dtSearch Engine provides an alternative method. Instead of highlighting the hits directly, the Engine can provide a map of the hits in each file. The map contains, for each hit, the byte offset in the file, the word offset, the page number, and the paragraph number.
+			</para>
+			<para>
+			The map is expressed as a string consisting of a series of entries delimited with the ";" character. The entries are formatted as follows:
+			</para>
+			<code>
+			wordOffset1 byteOffset1 page1 paragraph1;
+			wordOffset2 byteOffset2 page2 paragraph2;
+			</code>
+			<note>GetHitByteOffsets produces meaningful results <i>only</i> for plain text files.
+			For other file types, including HTML or RTF, GetHitByteOffsets will not work.
+			</note>
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.SearchResults.TotalHitCount">
+			<summary>
+			Total number of hits in all documents
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchResults.Request">
+			<summary>
+			The search request that generated this list of results
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchResults.DocHits">
+			<summary>
+			Word offsets of hits in the currently-selected document
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchResults.DocHitCount">
+			<summary>
+			Number of hits in the currently-selected document
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchResults.DocName">
+			<summary>
+			Name of the currently-selected document
+			</summary>
+			<remarks>
+			Same as SearchResultsItem.Filename
+			</remarks>
+		</member>
+		<member name="P:dtSearch.Engine.SearchResults.Count">
+			<summary>
+			Number of documents in the list
+			</summary>
+		</member>
+		<member name="P:dtSearch.Engine.SearchResults.CurrentItem">
+			<summary>
+			Returns properties of the currently-selected item
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.SearchResults.getImplementation">
+			<summary>
+			For internal use.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.SearchResults.Empty">
+			<summary>
+			Remove all items from the search results list.
+			</summary>
+		</member>
+	<member name="T:dtSearch.Engine.Server">
+		<summary>
+		dtSearch Engine version information, diagnostic logging, and utility functions.
+		</summary>
+	</member>
+			<member name="P:dtSearch.Engine.Server.MajorVersion">
+				<summary>
+				dtSearch Engine major version number
+				</summary>
+			</member>
+			<member name="P:dtSearch.Engine.Server.MinorVersion">
+				<summary>
+				dtSearch Engine minor version number
+				</summary>
+			</member>
+			<member name="P:dtSearch.Engine.Server.Build">
+				<summary>
+				dtSearch Engine build number
+				</summary>
+			</member>
+		<member name="M:dtSearch.Engine.Server.SetDebugLogging(System.String,dtSearch.Engine.DebugLogFlags)">
+			<summary>
+			Start recording a debug log in the specified file
+			</summary>
+			<param name="logName">Name of the log file to create</param>
+			<param name="flags">Flags controlling optional logging behavior</param>
+		</member>
+		<member name="M:dtSearch.Engine.Server.ConvertPath(System.String,System.Int32,dtSearch.Engine.ConvertPathFlags,System.String)">
+			<summary>
+			Convert between virtual and local paths.
+			</summary>
+			<param name="path">Path to convert, either a virtual or a local path, depending on the flags</param>
+			<param name="siteId">The id of the web site in IIS (the INSTANCE_ID server variable can be used)</param>
+			<param name="flags">Flags indicating the type of conversion to perform</param>
+			<param name="tableLocation">Registry key where the virtual path mappings are stored</param>
+			<remarks>
+			<para>
+			After a search, the SearchResults object contains a list of the files that were retrieved. These files are expressed as local paths, such as c:\docs\sample.doc. For web-based applications, it is usually preferable to report document locations using virtual directory names, such as /docs/sample.doc. Also, when highlighting hits in PDF files or creating direct links to retrieved documents, a virtual directory name is required.
+			</para>
+			<para>
+			Internet Information Server stores its mapping between virtual and local paths in the Metabase.
+			Reading this information from the Metabase is time-consuming and requires access rights that may not
+			be available to a process running in the web server context.  Therefore, the dtSearch Engine
+			caches this information in the registry, under the key HKEY_LOCAL_MACHINE\Software\dtSearch Corp.\dtSearch\Virtual Roots.
+			By default, ConvertPath will use the cached table values.  Call ConvertPath with the dtsCpRefreshMappings + dtsCpStoreInRegistry flags to update the cached information. (Running dtWebSetup.exe, the dtSearch Web Setup program, will also update this information.)
+			</para>
+			<para>
+			If ConvertPath returns a blank string, it means that either (1) the folder passed in does not have a
+			virtual directory associated with it, or (2) the registry tables have not been refreshed since the
+			virtual directory was created.
+			</para>
+			</remarks>
+		</member>
+	<member name="T:dtSearch.Engine.WordListBuilder">
+		<summary>
+		Builds a scrolling list of indexed words a program can update as a user types in a search request.
+		</summary>
+	</member>
+		<member name="P:dtSearch.Engine.WordListBuilder.Count">
+			<summary>
+			Number of words in the list
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.WordListBuilder.OpenIndex(System.String)">
+			<summary>
+			Open the index at IndexPath and return true if the index was opened successfully
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.WordListBuilder.CloseIndex">
+			<summary>
+			Close the index.
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.WordListBuilder.ListWords(System.String,System.Int32)">
+			<summary>
+			List words surrounding cursorWord in the index
+			</summary>
+			<param name="cursorWord">The word that will appear in the middle of the list</param>
+			<param name="range">Number of words to find before and after cursorWord in the index</param>
+			<returns>
+			Number of words in the list
+			</returns>
+		</member>
+		<member name="M:dtSearch.Engine.WordListBuilder.GetNthWord(System.Int32)">
+			<summary>
+			Get the text of a word in the word list.
+			</summary>
+			<param name="whichWord">Number from 0 to Count-1 indicating which word to get</param>
+			<returns>
+			Text of the word
+			</returns>
+		</member>
+		<member name="M:dtSearch.Engine.WordListBuilder.GetNthWordCount(System.Int32)">
+			<summary>
+			Get the number of times this word occurs in the index
+			</summary>
+			<param name="whichWord">Number from 0 to Count-1 indicating which word to get</param>
+			<returns>
+			Number of times this word was found in all documents in this index
+			</returns>
+		</member>
+		<member name="M:dtSearch.Engine.WordListBuilder.GetNthWordDocCount(System.Int32)">
+			<summary>
+			Get the number of documents in which this word occurs
+			</summary>
+			<param name="whichWord">Number from 0 to Count-1 indicating which word to get</param>
+			<returns>
+			Number of documents in which this word occurs.
+			</returns>
+		</member>
+		<member name="M:dtSearch.Engine.WordListBuilder.GetNthWordField(System.Int32)">
+			<summary>
+			Get field associated with a word
+			</summary>
+		</member>
+		<member name="M:dtSearch.Engine.WordListBuilder.ListMatchingWords(System.String,System.Int32,dtSearch.Engine.SearchFlags,System.Int32)">
+			<summary>
+			List all words in the index that match an expression
+			</summary>
+			<param name="toMatch">The expression to match</param>
+			<param name="nLimit">Maximum number of words to find</param>
+			<param name="searchFlags">Flags indicating how to match the words</param>
+			<param name="fuzziness">If searchFlags includes dtsSearchFuzzy, use fuzziness to indicate the
+			degree of fuzziness</param>
+			<returns>
+			Number of words found.
+			</returns>
+		</member>
+		<member name="M:dtSearch.Engine.WordListBuilder.ListFields">
+			<summary>
+			List all fields in the index
+			</summary>
+		</member>
+
+	</members>
+</doc>

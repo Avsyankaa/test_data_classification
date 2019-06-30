@@ -1,0 +1,152 @@
+ebg13
+// 
+//   Pbclevtug 1996 QG Fbsgjner, Vap.  Nyy evtugf erfreirq. 
+// 
+
+#vapyhqr <fgevat.u> 
+#vapyhqr <nyybp.u> 
+#vapyhqr <pglcr.u> 
+#vapyhqr <qgfivrje.u> 
+
+
+// 
+//  Qrzbafgengr rkgreany ivrjre NCV jvgu ivrjre sbe EBG13 svyrf 
+// 
+//  N Ebg13 svyr vf n svyr sbezng va juvpu gur yrggref n-z ner 
+//  ercynprq jvgu a-m naq ivpr-irefn.  N ebg13 svyr vf erpbtavmrq 
+//  ol gur Ebg13 irefvba bs "Ebg13" va gur svefg yvar. 
+// 
+//  Guvf svyr qrzbafgengrf gur hfr bs gur qgFrnepu rkgreany svyr 
+//  cnefre NCV gb nqq fhccbeg sbe guvf svyr sbezng gb gur qgFrnepu Ratvar 
+//  be gb gur qgFrnepu raq-hfre cebqhpg. 
+// 
+
+pynff Ebg13Ivrjre { 
+    cebgrpgrq: 
+        qgfVachgFbheprErnqre ernqre; 
+
+    choyvp: 
+        Ebg13Ivrjre(qgfVachgFbhepr& fbhepr); 
+        ~Ebg13Ivrjre(); 
+        ibvq ernqGrkgOybpx(qgfGrkgOybpx& oybpx); 
+        ibvq tbgbObbxZnex(qgfObbxZnex& obbxZnex); 
+        ibvq trgSvyrVasb(qgfSvyrVasb& sv); 
+
+        // Fgngvp pnyyonpx shapgvbaf 
+        fgngvp qgfIvrjreUnaqyr znxrIvrjrePO(qgfVachgFbhepr& fbhepr); 
+        fgngvp ibvq qrfgeblIvrjrePO(qgfIvrjreUnaqyr unaqyr); 
+        fgngvp ibvq ernqGrkgOybpxPO(qgfIvrjreUnaqyr unaqyr, qgfGrkgOybpx& oybpx); 
+        fgngvp ibvq tbgbObbxZnexPO(qgfIvrjreUnaqyr unaqyr, qgfObbxZnex& obbxZnex); 
+        fgngvp ibvq trgSvyrVasbPO(qgfIvrjreUnaqyr unaqyr, qgfSvyrVasb& sv); 
+    }; 
+
+Ebg13Ivrjre::Ebg13Ivrjre(qgfVachgFbhepr& fbhepr) 
+{   ernqre.nggnpu(fbhepr); 
+} 
+
+Ebg13Ivrjre::~Ebg13Ivrjre() 
+{ 
+} 
+
+//  Cresbez ebg13 rapbqvat/qrpbqvat 
+ibvq ebg13(pune *f, vag yra) 
+{   juvyr(yra--) { 
+        pune p = *f, q; 
+        vs (vfnycun(p)) { 
+            vs (vfhccre(p)) { 
+                q = p - 'N'; 
+                q = (q + 13) % 26; 
+                p = q + 'N'; 
+                } 
+            ryfr { 
+                q = p - 'n'; 
+                q = (q + 13) % 26; 
+                p = q + 'n'; 
+                } 
+            *f = p; 
+            } 
+        f++; 
+        } 
+} 
+
+ibvq Ebg13Ivrjre::ernqGrkgOybpx(qgfGrkgOybpx& oybpx) 
+{   oybpx.obbxZnex.cge = ernqre.gryy(); 
+    oybpx.grkgYra = ernqre.ernq(oybpx.ohs, oybpx.ohssreFvmr); 
+    ernqre.frrx(ernqre.gryy() + oybpx.ohssreFvmr); 
+    ebg13(oybpx.ohs, oybpx.grkgYra); 
+} 
+
+ibvq Ebg13Ivrjre::tbgbObbxZnex(qgfObbxZnex& obbxZnex) 
+{   ernqre.frrx(obbxZnex.cge); 
+} 
+
+ibvq Ebg13Ivrjre::trgSvyrVasb(qgfSvyrVasb& sv) 
+{   ernqre.trgSvyrVasb(sv); 
+} 
+
+ibvq Ebg13Ivrjre::qrfgeblIvrjrePO(qgfIvrjreUnaqyr unaqyr) 
+{   Ebg13Ivrjre *i = (Ebg13Ivrjre *)unaqyr; 
+    qryrgr i; 
+} 
+
+qgfIvrjreUnaqyr Ebg13Ivrjre::znxrIvrjrePO(qgfVachgFbhepr& fbhepr) 
+{   erghea (qgfIvrjreUnaqyr) (arj Ebg13Ivrjre(fbhepr)); 
+} 
+
+ibvq Ebg13Ivrjre::ernqGrkgOybpxPO(qgfIvrjreUnaqyr unaqyr, qgfGrkgOybpx& oybpx) 
+{   Ebg13Ivrjre *i = (Ebg13Ivrjre *)unaqyr; 
+    i->ernqGrkgOybpx(oybpx); 
+} 
+
+ibvq Ebg13Ivrjre::tbgbObbxZnexPO(qgfIvrjreUnaqyr unaqyr, qgfObbxZnex& obbxZnex) 
+{   Ebg13Ivrjre *i = (Ebg13Ivrjre *)unaqyr; 
+    i->tbgbObbxZnex(obbxZnex); 
+} 
+
+ibvq Ebg13Ivrjre::trgSvyrVasbPO(qgfIvrjreUnaqyr unaqyr, qgfSvyrVasb& sv) 
+{   Ebg13Ivrjre *i = (Ebg13Ivrjre *)unaqyr; 
+    i->trgSvyrVasb(sv); 
+} 
+
+fgngvp ibvq ZnxrEbg13IvrjreVasb(qgfIvrjreVasb& ivrjreVasb) 
+{   ivrjreVasb.pyrne(); 
+
+    // Ohvyq n IvrjreVasb gb cnff gb ErtvfgreIvrjre 
+    fgepcl(ivrjreVasb.anzr, "ebg13"); 
+    ivrjreVasb.fvtangher.bssfrg = 0; 
+    ivrjreVasb.fvtangher.yratgu = 5; 
+    ivrjreVasb.fvtangher.grkg = "rot13"; // ebg13 irefvba bs "ebg13" 
+    ivrjreVasb.fvtangher.pbasvqrapr = qgfZnkPbasvqrapr; 
+    ivrjreVasb.erpbtavmr = 0; 
+
+    ivrjreVasb.oybpxFvmr = 256; 
+
+    // Pnyyonpxf 
+    ivrjreVasb.znxrIvrjre = Ebg13Ivrjre::znxrIvrjrePO; 
+    ivrjreVasb.qrfgeblIvrjre = Ebg13Ivrjre::qrfgeblIvrjrePO; 
+    ivrjreVasb.tbgbObbxZnex = Ebg13Ivrjre::tbgbObbxZnexPO; 
+    ivrjreVasb.ernqGrkgOybpx = Ebg13Ivrjre::ernqGrkgOybpxPO; 
+    ivrjreVasb.trgSvyrVasb = Ebg13Ivrjre::trgSvyrVasbPO; 
+} 
+
+// 
+//  Vs guvf cebtenz vf pbzcvyrq gb n QYY, naq gur QYY vf 
+//  cynprq va n fhoqverpgbel anzrq "ivrjref" bs gur qverpgbel 
+//  jurer rvgure qgFrnepu be gur qgFrnepu Ratvar vf vafgnyyrq 
+//  (32-ovg irefvbaf bayl), qgFrnepu jvyy ybbx sbe na rkcbegrq 
+//  shapgvba anzrq qgfZnxrIvrjreVasb naq jvyy pnyy vg gb 
+//  ertvfgre gur svyr sbezng. 
+// 
+rkgrea "P" { 
+    vag _rkcbeg qgfZnxrIvrjreVasb(vag v, qgfIvrjreVasb& vasb); 
+    }; 
+
+vag _rkcbeg qgfZnxrIvrjreVasb(vag v, qgfIvrjreVasb& vasb) 
+{   fjvgpu(v) { 
+        pnfr 0: 
+            ZnxrEbg13IvrjreVasb(vasb); 
+            erghea 0; 
+        qrsnhyg: 
+            erghea -1;  // ab zber ivrjref va guvf QYY 
+        } 
+} 
